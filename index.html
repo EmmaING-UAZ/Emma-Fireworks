@@ -203,8 +203,41 @@
     <div id="cart-overlay" class="hidden fixed inset-0 bg-black opacity-50 z-40"></div>
 
 
+    <!-- Modal de Producto (estructura básica) -->
+    <div id="product-modal-popular" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-product-name-popular" class="text-2xl font-semibold text-gray-800">Nombre del Producto</h3>
+                <button id="close-modal-button-popular" aria-label="Cerrar modal" class="text-gray-600 hover:text-red-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="md:flex md:space-x-6">
+                <div class="md:w-1/2 mb-4 md:mb-0">
+                    <img id="modal-product-image-popular" src="https://via.placeholder.com/400x400.png?text=Producto" alt="Imagen del producto" class="w-full h-auto rounded-lg object-cover">
+                </div>
+                <div class="md:w-1/2">
+                    <p id="modal-product-description-popular" class="text-gray-600 mb-4">Descripción detallada del producto...</p>
+                    <p class="text-2xl font-bold text-yellow-600 mb-4" id="modal-product-price-popular">$0.00</p>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <button id="modal-decrease-quantity-popular" aria-label="Disminuir cantidad" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300">-</button>
+                        <span id="modal-product-quantity-popular" class="text-lg font-semibold">1</span>
+                        <button id="modal-increase-quantity-popular" aria-label="Aumentar cantidad" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300">+</button>
+                    </div>
+                    <button id="modal-add-to-cart-button-popular" class="w-full bg-yellow-500 text-white py-2.5 rounded-md font-semibold hover:bg-yellow-600 transition-colors duration-300">
+                        Agregar al Carrito
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="js/main.js"></script>
     <script src="js/cart.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/modal-popular.js"></script>
 </body>
 </html>
