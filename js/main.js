@@ -179,11 +179,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p class="text-sm text-gray-600 mb-3 flex-grow">${product.description.length > 60 ? product.description.substring(0, 60) + '...' : product.description}</p>
                             <p class="text-xl font-bold text-yellow-600 mb-4">${formatCurrency(product.price)}</p>
                             <div class="mt-auto">
-                                <button onclick="window.addToCart({id:'${product.id}', name:'${product.name}', price:${product.price}, image:'${product.image}', description:'${product.description}'}, 1)"
+                                <div class="flex items-center justify-center space-x-3 mb-4">
+                                    <button onclick="updateQuantity('${product.id}', -1)" aria-label="Disminuir cantidad" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300">-</button>
+                                    <span id="quantity-${product.id}" class="text-lg font-semibold">1</span>
+                                    <button onclick="updateQuantity('${product.id}', 1)" aria-label="Aumentar cantidad" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300">+</button>
+                                </div>
+                                <button onclick="window.addToCart({id:'${product.id}', name:'${product.name}', price:${product.price}, image:'${product.image}', description:'${product.description}'}, getQuantity('${product.id}'))"
                                         class="w-full bg-yellow-500 text-white py-2 px-4 rounded-md font-semibold hover:bg-yellow-600 transition-colors duration-300 text-sm">
                                     Agregar al Carrito
                                 </button>
-                                <button onclick="window.openProductModal({id:'${product.id}', name:'${product.name}', price:${product.price}, image:'${product.image}', description:'${product.description}'})"
+                                <button onclick="window.openPopularProductModal({id:'${product.id}', name:'${product.name}', price:${product.price}, image:'${product.image}', description:'${product.description}'})"
                                         class="w-full mt-2 bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors duration-300 text-sm">
                                     Ver Más
                                 </button>
@@ -442,7 +447,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="text-sm text-gray-500 mb-3 flex-grow">${truncatedDescription}</p>
                     <p class="text-2xl font-bold text-yellow-600 mb-5">${formatCurrency(product.price)}</p>
                     <div class="mt-auto space-y-2">
-                        <button onclick="window.addToCart({id:'${product.id}', name:'${product.name}', price:${product.price}, image:'${product.image}', description:'${product.description}'}, 1)"
+                        <div class="flex items-center justify-center space-x-3 mb-2">
+                            <button onclick="updateQuantity('${product.id}', -1)" aria-label="Disminuir cantidad" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300">-</button>
+                            <span id="quantity-${product.id}" class="text-lg font-semibold">1</span>
+                            <button onclick="updateQuantity('${product.id}', 1)" aria-label="Aumentar cantidad" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300">+</button>
+                        </div>
+                        <button onclick="window.addToCart({id:'${product.id}', name:'${product.name}', price:${product.price}, image:'${product.image}', description:'${product.description}'}, getQuantity('${product.id}'))"
                                 class="w-full bg-yellow-500 text-white py-2.5 px-4 rounded-md font-semibold hover:bg-yellow-600 transition-colors duration-300 text-base">
                             Agregar al Carrito
                         </button>
@@ -533,4 +543,24 @@ if (typeof formatCurrency !== 'function') {
     function formatCurrency(amount) {
         return `$${parseFloat(amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     }
+}
+
+function updateQuantity(productId, change) {
+    const quantityElement = document.getElementById(`quantity-${productId}`);
+    if (quantityElement) {
+        let currentQuantity = parseInt(quantityElement.textContent, 10);
+        currentQuantity += change;
+        if (currentQuantity < 1) {
+            currentQuantity = 1;
+        }
+        quantityElement.textContent = currentQuantity;
+    }
+}
+
+function getQuantity(productId) {
+    const quantityElement = document.getElementById(`quantity-${productId}`);
+    if (quantityElement) {
+        return parseInt(quantityElement.textContent, 10);
+    }
+    return 1; // Default to 1 if not found
 }
