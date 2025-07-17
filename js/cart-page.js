@@ -33,6 +33,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (generatePdfButton) {
         generatePdfButton.addEventListener('click', () => {
+            const nameInput = document.getElementById('name');
+            const phoneInput = document.getElementById('phone');
+            const addressInput = document.getElementById('address');
+
+            const name = nameInput.value.trim();
+            const phone = phoneInput.value.trim();
+            const address = addressInput.value.trim();
+
+            if (!name || !phone) {
+                alert('Por favor, complete los campos de Nombre y Teléfono antes de generar el PDF.');
+
+                if (!name) {
+                    nameInput.style.borderColor = 'red';
+                }
+                if (!phone) {
+                    phoneInput.style.borderColor = 'red';
+                }
+
+                return;
+            }
+
+            nameInput.style.borderColor = '';
+            phoneInput.style.borderColor = '';
+
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
@@ -47,10 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.text("Resumen del Pedido", doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
 
             // Datos del cliente
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-            const address = document.getElementById('address').value;
-
             doc.setFontSize(12);
             doc.setTextColor(0, 0, 0);
             doc.text("Nombre: " + name, 14, 40);
