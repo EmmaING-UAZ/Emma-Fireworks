@@ -68,6 +68,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            if (phone.length < 10) {
+                errorMessage.textContent = 'El número de teléfono debe tener al menos 10 dígitos.';
+                phoneInput.style.borderColor = 'red';
+                return;
+            }
+
             hideError();
 
             const { jsPDF } = window.jspdf;
