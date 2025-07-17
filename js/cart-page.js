@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const cartSummaryContainer = document.getElementById('cart-summary-container');
     const generatePdfButton = document.getElementById('generate-pdf-button');
+    const errorMessage = document.getElementById('error-message');
+    const nameInput = document.getElementById('name');
+    const phoneInput = document.getElementById('phone');
+    const addressInput = document.getElementById('address');
 
     const cart = JSON.parse(localStorage.getItem('emmaFireworksCart')) || [];
 
@@ -31,18 +35,28 @@ document.addEventListener('DOMContentLoaded', () => {
         cartSummaryContainer.innerHTML = summaryHtml;
     }
 
+    function hideError() {
+        errorMessage.textContent = '';
+        nameInput.style.borderColor = '';
+        phoneInput.style.borderColor = '';
+    }
+
+    if (nameInput) {
+        nameInput.addEventListener('input', hideError);
+    }
+    if (phoneInput) {
+        phoneInput.addEventListener('input', hideError);
+    }
+
+
     if (generatePdfButton) {
         generatePdfButton.addEventListener('click', () => {
-            const nameInput = document.getElementById('name');
-            const phoneInput = document.getElementById('phone');
-            const addressInput = document.getElementById('address');
-
             const name = nameInput.value.trim();
             const phone = phoneInput.value.trim();
             const address = addressInput.value.trim();
 
             if (!name || !phone) {
-                alert('Por favor, complete los campos de Nombre y Teléfono antes de generar el PDF.');
+                errorMessage.textContent = 'Por favor, complete todos los campos obligatorios.';
 
                 if (!name) {
                     nameInput.style.borderColor = 'red';
@@ -54,8 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            nameInput.style.borderColor = '';
-            phoneInput.style.borderColor = '';
+            hideError();
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
