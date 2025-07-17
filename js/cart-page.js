@@ -122,7 +122,14 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.setTextColor(0, 0, 0);
             doc.text(`Total General: $${total.toFixed(2)}`, doc.internal.pageSize.getWidth() - 14, finalY + 15, { align: 'right' });
 
-            doc.save('resumen-pedido-emmafireworks.pdf');
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            if (isMobile) {
+                const pdfDataUri = doc.output('datauristring');
+                const newTab = window.open();
+                newTab.document.write(`<iframe src="${pdfDataUri}" width="100%" height="100%" frameborder="0"></iframe>`);
+            } else {
+                doc.save('resumen-pedido-emmafireworks.pdf');
+            }
 
             localStorage.removeItem('emmaFireworksCart');
             window.location.href = 'catalogo.html';
