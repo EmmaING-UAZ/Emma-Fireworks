@@ -33,6 +33,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (generatePdfButton) {
         generatePdfButton.addEventListener('click', () => {
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+
+            if (!name || !phone || !address) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Formulario Incompleto',
+                    text: 'Por favor, complete todos los campos de información de entrega.',
+                    confirmButtonColor: '#fBBF24'
+                });
+                return;
+            }
+
+            if (phone.length < 10) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Teléfono Inválido',
+                    text: 'El número de teléfono debe tener al menos 10 dígitos.',
+                    confirmButtonColor: '#fBBF24'
+                });
+                return;
+            }
+
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
@@ -47,10 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.text("Resumen del Pedido", doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
 
             // Datos del cliente
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-            const address = document.getElementById('address').value;
-
             doc.setFontSize(12);
             doc.setTextColor(0, 0, 0);
             doc.text("Nombre: " + name, 14, 40);
