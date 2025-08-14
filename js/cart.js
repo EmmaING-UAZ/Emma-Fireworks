@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
             cartItemsContainer.appendChild(itemElement);
         });
 
-        addRemoveEventListeners();
         updateCartTotal();
         updateCartCount();
     }
@@ -143,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicializar carrito al cargar la página
     renderCartItems();
+    addRemoveEventListeners();
 
     // === Funciones Globales para ser usadas por otras páginas ===
 
