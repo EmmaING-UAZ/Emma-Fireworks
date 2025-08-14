@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cartCountDesktop = document.getElementById('cart-count-desktop');
     const cartCountMobile = document.getElementById('cart-count-mobile');
     const checkoutButton = document.getElementById('checkout-button');
+    const clearCartButton = document.getElementById('clear-cart-button');
 
     let cart = JSON.parse(localStorage.getItem('emmaFireworksCart')) || [];
 
@@ -105,6 +106,16 @@ document.addEventListener('DOMContentLoaded', () => {
         cart = cart.filter(item => item.id !== productId);
         saveCart();
         renderCartItems();
+    }
+
+    function clearCart() {
+        cart = [];
+        saveCart();
+        renderCartItems();
+    }
+
+    if (clearCartButton) {
+        clearCartButton.addEventListener('click', clearCart);
     }
 
     if (checkoutButton) {
