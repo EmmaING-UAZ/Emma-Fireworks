@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cartSummaryContainer = document.getElementById('cart-summary-container');
     const generatePdfButton = document.getElementById('generate-pdf-button');
 
-    const cart = JSON.parse(localStorage.getItem('emmaFireworksCart')) || [];
+    let cart = JSON.parse(localStorage.getItem('emmaFireworksCart')) || [];
 
     function renderCartSummary() {
         if (cart.length === 0) {
