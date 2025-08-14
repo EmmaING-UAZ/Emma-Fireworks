@@ -129,6 +129,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicializar carrito al cargar la página
     renderCartItems();
+
+    // === Funciones Globales para ser usadas por otras páginas ===
+
+    // Función para actualizar la cantidad (usada por cart-page.js)
+    window.updateCartItemQuantity = function(productId, newQuantity) {
+        let cart = JSON.parse(localStorage.getItem('emmaFireworksCart')) || [];
+        const itemIndex = cart.findIndex(item => item.id === productId);
+
+        if (itemIndex > -1) {
+            if (newQuantity > 0) {
+                cart[itemIndex].quantity = newQuantity;
+            } else {
+                // Si la nueva cantidad es 0 o menos, eliminamos el item
+                cart.splice(itemIndex, 1);
+            }
+            localStorage.setItem('emmaFireworksCart', JSON.stringify(cart));
+        }
+    };
+
+    // Función para eliminar un item (usada por cart-page.js)
+    window.removeCartItem = function(productId) {
+        let cart = JSON.parse(localStorage.getItem('emmaFireworksCart')) || [];
+        const updatedCart = cart.filter(item => item.id !== productId);
+        localStorage.setItem('emmaFireworksCart', JSON.stringify(updatedCart));
+    };
 });
 
 // Helper para formatear moneda (global o importado si se usa módulos)

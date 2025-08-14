@@ -62,36 +62,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const cartContainer = document.getElementById('cart-summary-container');
 
         cartContainer.addEventListener('click', (event) => {
-            const target = event.target;
-            const button = target.closest('button');
+            const button = event.target.closest('button');
             if (!button) return;
 
-            const row = button.closest('.summary-table-row');
-            const productId = row.dataset.id;
+            const productId = button.dataset.id;
+            if (!productId) return;
+
+            const item = cart.find(i => i.id === productId);
+            if (!item) return;
 
             if (button.classList.contains('increase-quantity')) {
-                const item = cart.find(i => i.id === productId);
-                if (item) {
-                    item.quantity++;
-                    localStorage.setItem('emmaFireworksCart', JSON.stringify(cart));
-                    renderCartSummary();
-                }
+                window.updateCartItemQuantity(productId, item.quantity + 1);
+                location.reload(); // Recargar para mostrar el estado actualizado
             } else if (button.classList.contains('decrease-quantity')) {
-                const item = cart.find(i => i.id === productId);
-                if (item && item.quantity > 1) {
-                    item.quantity--;
-                    localStorage.setItem('emmaFireworksCart', JSON.stringify(cart));
-                    renderCartSummary();
-                } else if (item && item.quantity === 1) {
-                    // Si la cantidad es 1, eliminar el producto
-                    cart = cart.filter(i => i.id !== productId);
-                    localStorage.setItem('emmaFireworksCart', JSON.stringify(cart));
-                    renderCartSummary();
-                }
+                window.updateCartItemQuantity(productId, item.quantity - 1);
+                location.reload();
             } else if (button.classList.contains('remove-item-btn')) {
-                cart = cart.filter(i => i.id !== productId);
-                localStorage.setItem('emmaFireworksCart', JSON.stringify(cart));
-                renderCartSummary();
+                window.removeCartItem(productId);
+                location.reload();
             }
         });
     }
