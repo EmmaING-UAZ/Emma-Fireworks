@@ -133,3 +133,163 @@ main {
     'gray-100': '#f3f4f6' -> Fondos claros alternativos
     'gray-200': '#e5e7eb' -> Bordes, fondos de botones secundarios
 */
+
+/* ============================================= */
+/* === Estilos para el Resumen del Pedido (Pure CSS) === */
+/* ============================================= */
+
+/* Contenedor principal de la tarjeta de resumen */
+.order-summary-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    color: #374151; /* gray-700 */
+}
+
+/* Título "Resumen del Pedido" */
+.summary-title {
+    font-size: 1.5rem; /* 24px */
+    font-weight: 700;
+    margin-bottom: 1rem; /* 16px */
+    color: #1f2937; /* gray-800 */
+}
+
+/* Estructura de la tabla (usando CSS Grid) */
+.summary-table-header,
+.summary-table-row {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1.5fr 1.5fr; /* 4 columnas */
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb; /* gray-200 */
+    align-items: center;
+}
+
+/* Cabecera de la tabla */
+.summary-table-header {
+    font-weight: 600;
+    color: #4b5563; /* gray-600 */
+    font-size: 0.875rem; /* 14px */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Filas de la tabla */
+.summary-table-row {
+    font-size: 0.95rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.summary-table-row:hover {
+    background-color: #f9fafb; /* gray-50 */
+    transform: scale(1.02);
+}
+
+.table-cell[data-label="Producto"] {
+    font-weight: 600;
+}
+
+/* Pie de la tabla (Total) */
+.summary-table-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 2px solid #d1d5db; /* gray-300 */
+    font-size: 1.25rem; /* 20px */
+}
+
+.footer-label {
+    font-weight: 600;
+    margin-right: 16px;
+}
+
+.footer-value {
+    font-weight: 700;
+    color: #ca8a04; /* yellow-600 */
+}
+
+/* Contenedor de acciones (botón) */
+.summary-actions {
+    margin-top: 24px;
+    text-align: center;
+}
+
+/* Botón de generar PDF */
+.btn-generate-pdf {
+    background-color: #f59e0b; /* yellow-500 */
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-generate-pdf:hover {
+    background-color: #d97706; /* yellow-600 */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+}
+
+/* --- Media Query para Responsividad --- */
+@media (max-width: 768px) {
+    /* En pantallas pequeñas, ocultamos la cabecera de la tabla */
+    .summary-table-header {
+        display: none;
+    }
+
+    /* Convertimos las filas en tarjetas */
+    .summary-table-row {
+        grid-template-columns: 1fr; /* Una sola columna */
+        gap: 8px;
+        padding: 16px;
+        border: 1px solid #e5e7eb; /* gray-200 */
+        border-radius: 8px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .summary-table-row:hover {
+        transform: translateY(-3px) scale(1.01);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    }
+
+    .summary-table-body {
+        border-top: 1px solid #e5e7eb;
+        padding-top: 12px;
+    }
+
+    /* Mostramos las celdas como bloques y usamos los data-label para los títulos */
+    .table-cell {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+    }
+
+    .table-cell::before {
+        content: attr(data-label); /* Mostramos el label */
+        font-weight: 600;
+        color: #4b5563; /* gray-600 */
+        margin-right: 16px;
+    }
+
+    .table-cell[data-label="Producto"] {
+        font-size: 1.1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        background-color: #f9fafb;
+        padding: 8px;
+        margin: -16px -16px 8px -16px;
+        border-radius: 8px 8px 0 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .table-cell[data-label="Producto"]::before {
+        display: none; /* No necesitamos el label "Producto" en la tarjeta */
+    }
+}

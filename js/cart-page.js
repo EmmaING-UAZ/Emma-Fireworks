@@ -6,28 +6,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderCartSummary() {
         if (cart.length === 0) {
-            cartSummaryContainer.innerHTML = '<p class="text-gray-500 text-center">Tu carrito está vacío.</p>';
+            cartSummaryContainer.innerHTML = '<p>Tu carrito está vacío.</p>';
             generatePdfButton.disabled = true;
             return;
         }
 
         let total = 0;
-        let summaryHtml = '<table class="w-full text-left"><thead><tr><th class="p-2">Producto</th><th class="p-2">Cantidad</th><th class="p-2">Precio</th><th class="p-2">Subtotal</th></tr></thead><tbody>';
+        let summaryHtml = `
+            <div class="summary-table-header">
+                <div class="header-cell">Producto</div>
+                <div class="header-cell">Cantidad</div>
+                <div class="header-cell">Precio</div>
+                <div class="header-cell">Subtotal</div>
+            </div>
+            <div class="summary-table-body">
+        `;
 
         cart.forEach(item => {
             const subtotal = item.price * item.quantity;
             summaryHtml += `
-                <tr>
-                    <td class="p-2">${item.name}</td>
-                    <td class="p-2">${item.quantity}</td>
-                    <td class="p-2">$${item.price.toFixed(2)}</td>
-                    <td class="p-2">$${subtotal.toFixed(2)}</td>
-                </tr>
+                <div class="summary-table-row">
+                    <div class="table-cell" data-label="Producto">${item.name}</div>
+                    <div class="table-cell" data-label="Cantidad">${item.quantity}</div>
+                    <div class="table-cell" data-label="Precio">$${item.price.toFixed(2)}</div>
+                    <div class="table-cell" data-label="Subtotal">$${subtotal.toFixed(2)}</div>
+                </div>
             `;
             total += subtotal;
         });
 
-        summaryHtml += `</tbody><tfoot><tr><td colspan="3" class="text-right p-2 font-bold">Total:</td><td class="p-2 font-bold">$${total.toFixed(2)}</td></tr></tfoot></table>`;
+        summaryHtml += `
+            </div>
+            <div class="summary-table-footer">
+                <div class="footer-label">Total:</div>
+                <div class="footer-value">$${total.toFixed(2)}</div>
+            </div>
+        `;
         cartSummaryContainer.innerHTML = summaryHtml;
     }
 

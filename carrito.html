@@ -53,13 +53,13 @@
                 </form>
             </div>
             <div>
-                <h2 class="text-2xl font-bold mb-4">Resumen del Pedido</h2>
-                <div id="cart-summary-container" class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="summary-title">Resumen del Pedido</h2>
+                <div id="cart-summary-container" class="order-summary-card">
                     <!-- El resumen del carrito se renderizará aquí -->
-                    <p class="text-gray-500 text-center">Cargando resumen del pedido...</p>
+                    <p>Cargando resumen del pedido...</p>
                 </div>
-                <div class="mt-6 text-center">
-                    <button id="generate-pdf-button" class="bg-yellow-500 text-white py-3 px-6 rounded-md font-semibold hover:bg-yellow-600 transition-colors duration-300">
+                <div class="summary-actions">
+                    <button id="generate-pdf-button" class="btn-generate-pdf">
                         Generar PDF del Pedido
                     </button>
                 </div>
