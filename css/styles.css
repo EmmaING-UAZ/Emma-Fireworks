@@ -1,16 +1,7 @@
 /* Tailwind se importa vía CDN en los HTML por ahora. */
 /* Este archivo es para estilos personalizados adicionales si son necesarios. */
 
-/* Ejemplo de importación de fuente si no se hace en el HTML:
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-body {
-    font-family: 'Poppins', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-*/
-
-/* Estilo para el color mostaza/dorado principal si se necesita globalmente y no solo con clases de Tailwind */
+/* Estilo para el color mostaza/dorado principal si se necesita globalmente */
 :root {
     --color-primary: #DAA520; /* Un tono de dorado/mostaza, ajustar según el logo */
     --color-primary-dark: #B8860B; /* Un tono más oscuro para hover/active */
@@ -67,11 +58,6 @@ body.cart-panel-open, body.modal-open {
     overflow: hidden; /* Evita el scroll del body cuando el panel o modal están abiertos */
 }
 
-/* Estilos para el modal de producto (si se necesitan ajustes finos no cubiertos por Tailwind) */
-#product-modal .modal-content { /* DEPRECATED if modal content is directly styled with Tailwind */
-    max-height: 90vh; /* Asegura que el modal no sea más alto que la ventana */
-}
-
 /* Firefox scrollbar styling */
 html {
     scrollbar-width: thin; /* "auto" or "thin" */
@@ -99,24 +85,46 @@ main {
     box-shadow: 0 6px 12px rgba(0,0,0,0.12);
 }
 
-/* Efecto específico para botones principales */
+/* Efecto específico para botones principales (Reemplazo de @apply) */
 .btn-primary {
-    @apply bg-yellow-500 text-white font-semibold py-3 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105;
+    background-color: #f59e0b; /* bg-yellow-500 */
+    color: #ffffff; /* text-white */
+    font-weight: 600; /* font-semibold */
+    padding: 0.75rem 2rem; /* py-3 px-8 */
+    border-radius: 0.5rem; /* rounded-lg */
+    font-size: 1.125rem; /* text-lg */
+    transition: all 0.3s ease-in-out;
 }
 .btn-primary:hover {
-     @apply bg-yellow-600;
-     box-shadow: 0 4px 10px rgba(218, 165, 32, 0.4); /* Sombra color mostaza */
+    background-color: #d97706; /* bg-yellow-600 */
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(218, 165, 32, 0.4);
 }
 
-/* Estilo para los filtros de categoría activos y hover */
+/* Estilo para los filtros de categoría activos y hover (Reemplazo de @apply) */
 #category-filters button {
-    @apply px-4 py-2 m-1 rounded-md transition-all duration-200 font-medium border-2 border-transparent;
+    padding: 0.5rem 1rem; /* px-4 py-2 */
+    margin: 0.25rem; /* m-1 */
+    border-radius: 0.375rem; /* rounded-md */
+    transition: all 0.2s ease-in-out;
+    font-weight: 500; /* font-medium */
+    border: 2px solid transparent; /* border-2 border-transparent */
+    cursor: pointer;
 }
 #category-filters button[data-active="true"] {
-    @apply bg-yellow-500 text-white border-yellow-500 shadow-md;
+    background-color: #f59e0b; /* bg-yellow-500 */
+    color: #ffffff; /* text-white */
+    border-color: #f59e0b; /* border-yellow-500 */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
 }
 #category-filters button[data-active="false"] {
-    @apply bg-gray-100 text-gray-700 hover:bg-yellow-400 hover:text-white hover:border-yellow-400;
+    background-color: #f3f4f6; /* bg-gray-100 */
+    color: #374151; /* text-gray-700 */
+}
+#category-filters button[data-active="false"]:hover {
+    background-color: #fbbf24; /* hover:bg-yellow-400 */
+    color: #ffffff; /* hover:text-white */
+    border-color: #fbbf24; /* hover:border-yellow-400 */
 }
 
 /* Asegurar que los iconos SVG dentro de botones/links hereden el color y la transición */
@@ -124,12 +132,193 @@ main {
     transition: fill 0.3s ease, stroke 0.3s ease;
 }
 
-/* Colores de Tailwind usados frecuentemente para referencia y posible personalización futura en tailwind.config.js */
-/*
-    'yellow-500': '#f59e0b' (Tailwind v2, or similar in v3 e.g. amber-500) -> Usado como primario
-    'yellow-600': '#d97706' (Tailwind v2, or similar in v3 e.g. amber-600) -> Usado para hover primario
-    'gray-800': '#1f2937' -> Texto principal
-    'gray-900': '#111827' -> Texto más oscuro
-    'gray-100': '#f3f4f6' -> Fondos claros alternativos
-    'gray-200': '#e5e7eb' -> Bordes, fondos de botones secundarios
-*/
+
+/* ============================================= */
+/* === Estilos para el Resumen del Pedido (Pure CSS) === */
+/* ============================================= */
+
+/* Contenedor principal de la tarjeta de resumen */
+.order-summary-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    color: #374151; /* gray-700 */
+}
+
+/* Título "Resumen del Pedido" */
+.summary-title {
+    font-size: 1.5rem; /* 24px */
+    font-weight: 700;
+    margin-bottom: 1rem; /* 16px */
+    color: #1f2937; /* gray-800 */
+}
+
+/* Estructura de la tabla (usando CSS Grid) */
+.summary-table-header,
+.summary-table-row {
+    display: grid;
+    grid-template-columns: 3fr 1.5fr 1.5fr 1.5fr 1fr; /* 5 columnas */
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb; /* gray-200 */
+    align-items: center;
+}
+
+/* Estilos para los botones de cantidad y eliminar */
+.quantity-change-btn {
+    background-color: #f3f4f6; /* gray-100 */
+    border: 1px solid #d1d5db; /* gray-300 */
+    border-radius: 9999px; /* rounded-full */
+    width: 32px;
+    height: 32px;
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 700; /* font-bold */
+    color: #4b5563; /* gray-600 */
+    transition: background-color 0.2s;
+    line-height: 1;
+}
+.quantity-change-btn:hover {
+    background-color: #e5e7eb; /* gray-200 */
+}
+.quantity-value {
+    margin: 0 12px;
+    font-weight: 500;
+    min-width: 20px;
+    text-align: center;
+}
+.remove-item-btn {
+    color: #ef4444; /* red-500 */
+    transition: color 0.2s;
+}
+.remove-item-btn:hover {
+    color: #b91c1c; /* red-700 */
+}
+
+/* Cabecera de la tabla */
+.summary-table-header {
+    font-weight: 600;
+    color: #4b5563; /* gray-600 */
+    font-size: 0.875rem; /* 14px */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Filas de la tabla */
+.summary-table-row {
+    font-size: 0.95rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.summary-table-row:hover {
+    background-color: #f9fafb; /* gray-50 */
+    transform: scale(1.02);
+}
+
+.table-cell[data-label="Producto"] {
+    font-weight: 600;
+}
+
+/* Pie de la tabla (Total) */
+.summary-table-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 2px solid #d1d5db; /* gray-300 */
+    font-size: 1.25rem; /* 20px */
+}
+
+.footer-label {
+    font-weight: 600;
+    margin-right: 16px;
+}
+
+.footer-value {
+    font-weight: 700;
+    color: #ca8a04; /* yellow-600 */
+}
+
+/* Contenedor de acciones (botón) */
+.summary-actions {
+    margin-top: 24px;
+    text-align: center;
+}
+
+/* Botón de generar PDF */
+.btn-generate-pdf {
+    background-color: #f59e0b; /* yellow-500 */
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-generate-pdf:hover {
+    background-color: #d97706; /* yellow-600 */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+}
+
+/* --- Media Query para Responsividad --- */
+@media (max-width: 840px) {
+    /* En pantallas pequeñas, ocultamos la cabecera de la tabla */
+    .summary-table-header {
+        display: none;
+    }
+
+    /* Convertimos las filas en tarjetas */
+    .summary-table-row {
+        grid-template-columns: 1fr; /* Una sola columna */
+        gap: 8px;
+        padding: 16px;
+        border: 1px solid #e5e7eb; /* gray-200 */
+        border-radius: 8px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .summary-table-row:hover {
+        transform: translateY(-3px) scale(1.01);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    }
+
+    .summary-table-body {
+        border-top: 1px solid #e5e7eb;
+        padding-top: 12px;
+    }
+
+    /* Mostramos las celdas como bloques y usamos los data-label para los títulos */
+    .table-cell {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+    }
+
+    .table-cell::before {
+        content: attr(data-label); /* Mostramos el label */
+        font-weight: 600;
+        color: #4b5563; /* gray-600 */
+        margin-right: 16px;
+    }
+
+    .table-cell[data-label="Producto"] {
+        font-size: 1.1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        background-color: #f9fafb;
+        padding: 8px;
+        margin: -16px -16px 8px -16px;
+        border-radius: 8px 8px 0 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .table-cell[data-label="Producto"]::before {
+        display: none; /* No necesitamos el label "Producto" en la tarjeta */
+    }
+}

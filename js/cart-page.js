@@ -2,33 +2,86 @@ document.addEventListener('DOMContentLoaded', () => {
     const cartSummaryContainer = document.getElementById('cart-summary-container');
     const generatePdfButton = document.getElementById('generate-pdf-button');
 
-    const cart = JSON.parse(localStorage.getItem('emmaFireworksCart')) || [];
+    let cart = JSON.parse(localStorage.getItem('emmaFireworksCart')) || [];
 
     function renderCartSummary() {
         if (cart.length === 0) {
-            cartSummaryContainer.innerHTML = '<p class="text-gray-500 text-center">Tu carrito está vacío.</p>';
+            cartSummaryContainer.innerHTML = '<p>Tu carrito está vacío.</p>';
             generatePdfButton.disabled = true;
             return;
         }
 
         let total = 0;
-        let summaryHtml = '<table class="w-full text-left"><thead><tr><th class="p-2">Producto</th><th class="p-2">Cantidad</th><th class="p-2">Precio</th><th class="p-2">Subtotal</th></tr></thead><tbody>';
+        let summaryHtml = `
+            <div class="summary-table-header">
+                <div class="header-cell">Producto</div>
+                <div class="header-cell">Precio</div>
+                <div class="header-cell">Cantidad</div>
+                <div class="header-cell">Subtotal</div>
+                <div class="header-cell">Acciones</div>
+            </div>
+            <div class="summary-table-body">
+        `;
 
         cart.forEach(item => {
             const subtotal = item.price * item.quantity;
             summaryHtml += `
-                <tr>
-                    <td class="p-2">${item.name}</td>
-                    <td class="p-2">${item.quantity}</td>
-                    <td class="p-2">$${item.price.toFixed(2)}</td>
-                    <td class="p-2">$${subtotal.toFixed(2)}</td>
-                </tr>
+                <div class="summary-table-row" data-id="${item.id}">
+                    <div class="table-cell" data-label="Producto">${item.name}</div>
+                    <div class="table-cell" data-label="Precio">$${item.price.toFixed(2)}</div>
+                    <div class="table-cell" data-label="Cantidad">
+                        <div class="flex items-center justify-end md:justify-start">
+                            <button class="quantity-change-btn decrease-quantity" data-id="${item.id}" aria-label="Disminuir cantidad">-</button>
+                            <span class="quantity-value">${item.quantity}</span>
+                            <button class="quantity-change-btn increase-quantity" data-id="${item.id}" aria-label="Aumentar cantidad">+</button>
+                        </div>
+                    </div>
+                    <div class="table-cell" data-label="Subtotal">$${subtotal.toFixed(2)}</div>
+                    <div class="table-cell" data-label="Acciones">
+                        <button class="remove-item-btn" data-id="${item.id}" aria-label="Eliminar producto">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg>
+                        </button>
+                    </div>
+                </div>
             `;
             total += subtotal;
         });
 
-        summaryHtml += `</tbody><tfoot><tr><td colspan="3" class="text-right p-2 font-bold">Total:</td><td class="p-2 font-bold">$${total.toFixed(2)}</td></tr></tfoot></table>`;
+        summaryHtml += `
+            </div>
+            <div class="summary-table-footer">
+                <div class="footer-label">Total:</div>
+                <div class="footer-value">$${total.toFixed(2)}</div>
+            </div>
+        `;
         cartSummaryContainer.innerHTML = summaryHtml;
+        addCartActionListeners();
+    }
+
+    function addCartActionListeners() {
+        const cartContainer = document.getElementById('cart-summary-container');
+
+        cartContainer.addEventListener('click', (event) => {
+            const button = event.target.closest('button');
+            if (!button) return;
+
+            const productId = button.dataset.id;
+            if (!productId) return;
+
+            const item = cart.find(i => i.id === productId);
+            if (!item) return;
+
+            if (button.classList.contains('increase-quantity')) {
+                window.updateCartItemQuantity(productId, item.quantity + 1);
+                location.reload(); // Recargar para mostrar el estado actualizado
+            } else if (button.classList.contains('decrease-quantity')) {
+                window.updateCartItemQuantity(productId, item.quantity - 1);
+                location.reload();
+            } else if (button.classList.contains('remove-item-btn')) {
+                window.removeCartItem(productId);
+                location.reload();
+            }
+        });
     }
 
     if (generatePdfButton) {

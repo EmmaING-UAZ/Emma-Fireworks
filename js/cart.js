@@ -42,18 +42,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const itemElement = document.createElement('div');
             itemElement.classList.add('flex', 'justify-between', 'items-center', 'py-3', 'border-b');
             itemElement.innerHTML = `
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 flex-grow">
                     <img src="${item.image || 'https://via.placeholder.com/50'}" alt="${item.name}" class="w-12 h-12 object-cover rounded">
-                    <div>
-                        <h4 class="font-semibold text-sm text-gray-800">${item.name}</h4>
-                        <p class="text-xs text-gray-500">${formatCurrency(item.price)} x ${item.quantity}</p>
+                    <div class="flex-grow">
+                        <h4 class="font-semibold text-sm text-gray-800 leading-tight">${item.name}</h4>
+                        <p class="text-xs text-gray-500">${formatCurrency(item.price)}</p>
+                        <div class="flex items-center space-x-2 mt-1">
+                            <button class="quantity-change-btn decrease-quantity" data-id="${item.id}" aria-label="Disminuir cantidad">-</button>
+                            <span class="quantity-value text-sm">${item.quantity}</span>
+                            <button class="quantity-change-btn increase-quantity" data-id="${item.id}" aria-label="Aumentar cantidad">+</button>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center space-x-2">
+                <div class="flex flex-col items-end space-y-1">
                     <span class="font-semibold text-sm text-gray-800">${formatCurrency(item.price * item.quantity)}</span>
                     <button data-id="${item.id}" class="remove-from-cart-btn text-red-500 hover:text-red-700" aria-label="Eliminar ${item.name} del carrito">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12.502 0c-.34.055-.68.11-.1.022.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
@@ -67,12 +72,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function addRemoveEventListeners() {
-        const removeButtons = document.querySelectorAll('.remove-from-cart-btn');
-        removeButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const itemId = e.currentTarget.dataset.id;
+        cartItemsContainer.addEventListener('click', (e) => {
+            const button = e.target.closest('button');
+            if (!button) return;
+
+            const itemId = button.dataset.id;
+            const itemInCart = cart.find(item => item.id === itemId);
+            if (!itemInCart) return;
+
+            if (button.classList.contains('remove-from-cart-btn')) {
                 removeItemFromCart(itemId);
-            });
+            } else if (button.classList.contains('increase-quantity')) {
+                updateItemQuantity(itemId, itemInCart.quantity + 1);
+            } else if (button.classList.contains('decrease-quantity')) {
+                updateItemQuantity(itemId, itemInCart.quantity - 1);
+            }
         });
     }
 
@@ -129,6 +143,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicializar carrito al cargar la página
     renderCartItems();
+
+    // === Funciones Globales para ser usadas por otras páginas ===
+
+    // Función para actualizar la cantidad (usada por cart-page.js)
+    window.updateCartItemQuantity = function(productId, newQuantity) {
+        let cart = JSON.parse(localStorage.getItem('emmaFireworksCart')) || [];
+        const itemIndex = cart.findIndex(item => item.id === productId);
+
+        if (itemIndex > -1) {
+            if (newQuantity > 0) {
+                cart[itemIndex].quantity = newQuantity;
+            } else {
+                // Si la nueva cantidad es 0 o menos, eliminamos el item
+                cart.splice(itemIndex, 1);
+            }
+            localStorage.setItem('emmaFireworksCart', JSON.stringify(cart));
+        }
+    };
+
+    // Función para eliminar un item (usada por cart-page.js)
+    window.removeCartItem = function(productId) {
+        let cart = JSON.parse(localStorage.getItem('emmaFireworksCart')) || [];
+        const updatedCart = cart.filter(item => item.id !== productId);
+        localStorage.setItem('emmaFireworksCart', JSON.stringify(updatedCart));
+    };
 });
 
 // Helper para formatear moneda (global o importado si se usa módulos)
