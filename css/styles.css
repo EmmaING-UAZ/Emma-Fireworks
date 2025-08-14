@@ -158,11 +158,39 @@ main {
 .summary-table-header,
 .summary-table-row {
     display: grid;
-    grid-template-columns: 3fr 1fr 1.5fr 1.5fr; /* 4 columnas */
+    grid-template-columns: 3fr 1.5fr 1.5fr 1.5fr 1fr; /* 5 columnas */
     gap: 16px;
     padding: 12px 0;
     border-bottom: 1px solid #e5e7eb; /* gray-200 */
     align-items: center;
+}
+
+/* Estilos para los botones de cantidad y eliminar */
+.quantity-change-btn {
+    background-color: #f3f4f6; /* gray-100 */
+    border: 1px solid #d1d5db; /* gray-300 */
+    border-radius: 9999px; /* rounded-full */
+    width: 28px;
+    height: 28px;
+    font-weight: 600;
+    color: #4b5563; /* gray-600 */
+    transition: background-color 0.2s;
+}
+.quantity-change-btn:hover {
+    background-color: #e5e7eb; /* gray-200 */
+}
+.quantity-value {
+    margin: 0 12px;
+    font-weight: 500;
+    min-width: 20px;
+    text-align: center;
+}
+.remove-item-btn {
+    color: #ef4444; /* red-500 */
+    transition: color 0.2s;
+}
+.remove-item-btn:hover {
+    color: #b91c1c; /* red-700 */
 }
 
 /* Cabecera de la tabla */
@@ -236,7 +264,7 @@ main {
 }
 
 /* --- Media Query para Responsividad --- */
-@media (max-width: 768px) {
+@media (max-width: 840px) {
     /* En pantallas pequeñas, ocultamos la cabecera de la tabla */
     .summary-table-header {
         display: none;

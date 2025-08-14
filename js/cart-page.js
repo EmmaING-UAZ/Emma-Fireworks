@@ -15,9 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let summaryHtml = `
             <div class="summary-table-header">
                 <div class="header-cell">Producto</div>
-                <div class="header-cell">Cantidad</div>
                 <div class="header-cell">Precio</div>
+                <div class="header-cell">Cantidad</div>
                 <div class="header-cell">Subtotal</div>
+                <div class="header-cell">Acciones</div>
             </div>
             <div class="summary-table-body">
         `;
@@ -25,11 +26,22 @@ document.addEventListener('DOMContentLoaded', () => {
         cart.forEach(item => {
             const subtotal = item.price * item.quantity;
             summaryHtml += `
-                <div class="summary-table-row">
+                <div class="summary-table-row" data-id="${item.id}">
                     <div class="table-cell" data-label="Producto">${item.name}</div>
-                    <div class="table-cell" data-label="Cantidad">${item.quantity}</div>
                     <div class="table-cell" data-label="Precio">$${item.price.toFixed(2)}</div>
+                    <div class="table-cell" data-label="Cantidad">
+                        <div class="flex items-center justify-end md:justify-start">
+                            <button class="quantity-change-btn decrease-quantity" data-id="${item.id}" aria-label="Disminuir cantidad">-</button>
+                            <span class="quantity-value">${item.quantity}</span>
+                            <button class="quantity-change-btn increase-quantity" data-id="${item.id}" aria-label="Aumentar cantidad">+</button>
+                        </div>
+                    </div>
                     <div class="table-cell" data-label="Subtotal">$${subtotal.toFixed(2)}</div>
+                    <div class="table-cell" data-label="Acciones">
+                        <button class="remove-item-btn" data-id="${item.id}" aria-label="Eliminar producto">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg>
+                        </button>
+                    </div>
                 </div>
             `;
             total += subtotal;
@@ -43,6 +55,45 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         cartSummaryContainer.innerHTML = summaryHtml;
+        addCartActionListeners();
+    }
+
+    function addCartActionListeners() {
+        const cartContainer = document.getElementById('cart-summary-container');
+
+        cartContainer.addEventListener('click', (event) => {
+            const target = event.target;
+            const button = target.closest('button');
+            if (!button) return;
+
+            const row = button.closest('.summary-table-row');
+            const productId = row.dataset.id;
+
+            if (button.classList.contains('increase-quantity')) {
+                const item = cart.find(i => i.id === productId);
+                if (item) {
+                    item.quantity++;
+                    localStorage.setItem('emmaFireworksCart', JSON.stringify(cart));
+                    renderCartSummary();
+                }
+            } else if (button.classList.contains('decrease-quantity')) {
+                const item = cart.find(i => i.id === productId);
+                if (item && item.quantity > 1) {
+                    item.quantity--;
+                    localStorage.setItem('emmaFireworksCart', JSON.stringify(cart));
+                    renderCartSummary();
+                } else if (item && item.quantity === 1) {
+                    // Si la cantidad es 1, eliminar el producto
+                    cart = cart.filter(i => i.id !== productId);
+                    localStorage.setItem('emmaFireworksCart', JSON.stringify(cart));
+                    renderCartSummary();
+                }
+            } else if (button.classList.contains('remove-item-btn')) {
+                cart = cart.filter(i => i.id !== productId);
+                localStorage.setItem('emmaFireworksCart', JSON.stringify(cart));
+                renderCartSummary();
+            }
+        });
     }
 
     if (generatePdfButton) {
