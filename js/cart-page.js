@@ -5,82 +5,110 @@ document.addEventListener('DOMContentLoaded', () => {
     let cart = JSON.parse(localStorage.getItem('emmaFireworksCart')) || [];
 
     function renderCartSummary() {
+        if (!cartSummaryContainer) return;
+
         if (cart.length === 0) {
-            cartSummaryContainer.innerHTML = '<p>Tu carrito está vacío.</p>';
-            generatePdfButton.disabled = true;
+            cartSummaryContainer.innerHTML = '<p class="text-gray-500 text-center py-8">Tu carrito está vacío.</p>';
+            if(generatePdfButton) generatePdfButton.disabled = true;
+            updateHeaderCartCount();
             return;
         }
 
+        if(generatePdfButton) generatePdfButton.disabled = false;
+
         let total = 0;
         let summaryHtml = `
-            <div class="summary-table-header">
+            <div class="summary-table-header hidden md:grid">
                 <div class="header-cell">Producto</div>
-                <div class="header-cell">Precio</div>
-                <div class="header-cell">Cantidad</div>
-                <div class="header-cell">Subtotal</div>
-                <div class="header-cell">Acciones</div>
+                <div class="header-cell text-center">Precio</div>
+                <div class="header-cell text-center">Cantidad</div>
+                <div class="header-cell text-right">Subtotal</div>
+                <div class="header-cell text-center">Acciones</div>
             </div>
             <div class="summary-table-body">
         `;
 
         cart.forEach(item => {
             const subtotal = item.price * item.quantity;
+            total += subtotal;
             summaryHtml += `
                 <div class="summary-table-row" data-id="${item.id}">
-                    <div class="table-cell" data-label="Producto">${item.name}</div>
-                    <div class="table-cell" data-label="Precio">$${item.price.toFixed(2)}</div>
+                    <div class="table-cell" data-label="Producto">
+                        <div class="flex items-center">
+                            <img src="${item.image || 'https://via.placeholder.com/50'}" alt="${item.name}" class="w-12 h-12 object-cover rounded mr-4 hidden sm:block">
+                            <span>${item.name}</span>
+                        </div>
+                    </div>
+                    <div class="table-cell" data-label="Precio">${formatCurrency(item.price)}</div>
                     <div class="table-cell" data-label="Cantidad">
-                        <div class="flex items-center justify-end md:justify-start">
+                        <div class="flex items-center justify-end md:justify-center">
                             <button class="quantity-change-btn decrease-quantity" data-id="${item.id}" aria-label="Disminuir cantidad">-</button>
-                            <span class="quantity-value">${item.quantity}</span>
+                            <span class="quantity-value mx-3">${item.quantity}</span>
                             <button class="quantity-change-btn increase-quantity" data-id="${item.id}" aria-label="Aumentar cantidad">+</button>
                         </div>
                     </div>
-                    <div class="table-cell" data-label="Subtotal">$${subtotal.toFixed(2)}</div>
+                    <div class="table-cell text-right md:text-right" data-label="Subtotal">${formatCurrency(subtotal)}</div>
                     <div class="table-cell" data-label="Acciones">
-                        <button class="remove-item-btn" data-id="${item.id}" aria-label="Eliminar producto">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg>
-                        </button>
+                         <div class="flex items-center justify-end md:justify-center">
+                            <button class="remove-item-btn" data-id="${item.id}" aria-label="Eliminar producto">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
-            total += subtotal;
         });
 
         summaryHtml += `
             </div>
             <div class="summary-table-footer">
                 <div class="footer-label">Total:</div>
-                <div class="footer-value">$${total.toFixed(2)}</div>
+                <div class="footer-value">${formatCurrency(total)}</div>
             </div>
         `;
         cartSummaryContainer.innerHTML = summaryHtml;
-        addCartActionListeners();
+        updateHeaderCartCount();
+    }
+
+    function updateHeaderCartCount() {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCountDesktop = document.getElementById('cart-count-desktop');
+        const cartCountMobile = document.getElementById('cart-count-mobile');
+        if (cartCountDesktop) cartCountDesktop.textContent = totalItems;
+        if (cartCountMobile) cartCountMobile.textContent = totalItems;
     }
 
     function addCartActionListeners() {
-        const cartContainer = document.getElementById('cart-summary-container');
+        if (!cartSummaryContainer) return;
 
-        cartContainer.addEventListener('click', (event) => {
+        cartSummaryContainer.addEventListener('click', (event) => {
             const button = event.target.closest('button');
             if (!button) return;
 
             const productId = button.dataset.id;
             if (!productId) return;
 
-            const item = cart.find(i => i.id === productId);
-            if (!item) return;
+            const itemIndex = cart.findIndex(i => i.id === productId);
+            if (itemIndex === -1) return;
 
             if (button.classList.contains('increase-quantity')) {
-                window.updateCartItemQuantity(productId, item.quantity + 1);
-                location.reload(); // Recargar para mostrar el estado actualizado
+                cart[itemIndex].quantity++;
             } else if (button.classList.contains('decrease-quantity')) {
-                window.updateCartItemQuantity(productId, item.quantity - 1);
-                location.reload();
+                if (cart[itemIndex].quantity > 1) {
+                    cart[itemIndex].quantity--;
+                } else {
+                    // Si la cantidad es 1, eliminar el producto
+                    cart.splice(itemIndex, 1);
+                }
             } else if (button.classList.contains('remove-item-btn')) {
-                window.removeCartItem(productId);
-                location.reload();
+                cart.splice(itemIndex, 1);
             }
+
+            // Guardar el estado actualizado en localStorage
+            localStorage.setItem('emmaFireworksCart', JSON.stringify(cart));
+
+            // Volver a renderizar el resumen del carrito sin recargar la página
+            renderCartSummary();
         });
     }
 
@@ -163,5 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Inicializar la página del carrito
     renderCartSummary();
+    addCartActionListeners();
 });
