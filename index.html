@@ -89,9 +89,9 @@
 
     <main>
         <!-- Sección Hero -->
-        <section class="text-white py-20 md:py-32 reveal-fade-in" style="background-image: url('img/fondo.webp'); background-size: cover; background-position: center; background-repeat: no-repeat;">
-
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center" style="background-color: rgba(0, 0, 0, 0.5); border-radius: 15px; padding: 2rem;">
+        <section class="relative h-screen flex flex-col items-center justify-center text-white reveal-fade-in" style="background-image: url('img/fondo.webp'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+            <div class="absolute inset-0 bg-black opacity-40"></div>
+            <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
                     Ilumina Tus Momentos <br class="hidden sm:block"> con <span class="text-yellow-300">Emma</span><span class="text-white">Fireworks</span>
                 </h1>
@@ -103,6 +103,11 @@
                     Ver Catálogo
                 </a>
             </div>
+            <a href="#productos-populares" class="scroll-down-arrow" aria-label="Ir a productos populares">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+            </a>
         </section>
 
         <!-- Sección Productos Populares (Carrusel) -->
