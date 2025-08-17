@@ -70,6 +70,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     color: #1f2937; /* Default text color - Tailwind gray-800 */
+    touch-action: manipulation;
 }
 
 main {
