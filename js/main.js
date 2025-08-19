@@ -130,54 +130,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const carouselContainer = document.getElementById('carousel-container');
 
     const featuredProducts = [
-        {
-            id: 'fp001',
-            name: 'batería la reina',
-            price: 1250.00,
-            image: 'img/productos/cake_imperial.jpg',
-            description: 'Impresionante batería de 100 disparos con variedad de efectos coloridos y sonoros. Ideal para grandes celebraciones.',
-            category: 'General'
-        },
-        {
-            id: 'fp002',
-            name: 'bazuka 4 pulgadas',
-            price: 80.00,
-            image: 'img/productos/bengalas.jpg',
-            description: 'Clásicas luces de bengala, seguras y divertidas para todas las edades. Chispas doradas brillantes.',
-            category: 'General'
-        },
-        {
-            id: 'fp003',
-            name: 'bob esponja',
-            price: 150.00,
-            image: 'img/productos/volcan_etna.jpg',
-            description: 'Fuente de chispas plateadas de larga duración que alcanza hasta 3 metros de altura.',
-            category: 'General'
-        },
-        {
-            id: 'fp004',
-            name: 'paloma grande',
-            price: 220.00,
-            image: 'img/productos/revelacion_azul.jpg',
-            description: 'Cañón de confeti y polvo de color azul para revelar el género del bebé. ¡Un momento emocionante!',
-            category: 'General'
-        },
-        {
-            id: 'fp005',
-            name: 'Trabuco',
-            price: 45.00,
-            image: 'img/productos/paloma_estruendo.jpg',
-            description: 'Petardo de gran trueno, para los amantes de los efectos sonoros potentes.',
-            category: 'General'
-        },
-        {
-            id: 'fp006',
-            name: 'volcán',
-            price: 350.00,
-            image: 'https://via.placeholder.com/300x200.png?text=Crisantemo+Rojo', // Placeholder
-            description: 'Un efecto clásico de crisantemo rojo que llena el cielo. Impactante y elegante.',
-            category: 'General'
-        }
+        { id: 'prod035', name: 'Cohetón de Luz', price: 450, image: 'img/productos/coheton-de-luz.webp', description: 'Contiene 12 piezas.', category: 'General' },
+        { id: 'prod032', name: 'Cohetoncito de Micrófono', price: 220, image: 'img/productos/cohetoncito-de-microfono.webp', description: 'Contiene 12 piezas.', category: 'General' },
+        { id: 'prod031', name: 'Cohetoncito de Cracker', price: 210, image: 'img/productos/cohetoncito-de-cracker.webp', description: 'Contiene 12 piezas.', category: 'General' },
+        { id: 'prod007', name: 'Bazuka 3 Pulgadas', price: 255, image: 'img/productos/bazuka-3-pulgadas.webp', description: 'Descripción no disponible.', category: 'General' },
+        { id: 'prod009', name: 'Bazuka 4 Pulgadas', price: 550, image: 'img/productos/bazuka-4-pulgadas.webp', description: 'Descripción no disponible.', category: 'General' },
+        { id: 'prod008', name: 'Bazuka 3 Pulgadas Cacahuate', price: 320, image: 'img/productos/bazuka-3-pulgadas-cacahuate.webp', description: 'Descripción no disponible.', category: 'General' },
+        { id: 'prod042', name: 'Escupidor de Colores', price: 120, image: 'img/productos/escupidor-de-colores.webp', description: 'Contiene 12 piezas.', category: 'General' },
+        { id: 'prod073', name: 'Trabuco', price: 100, image: 'img/productos/trabuco.webp', description: 'Contiene 6 piezas.', category: 'General' },
+        { id: 'prod079', name: 'Vara Mini Llorona', price: 110, image: 'img/productos/vara-mini-llorona.webp', description: 'Contiene 25 piezas.', category: 'General' },
+        { id: 'prod076', name: 'Vara Cobra', price: 60, image: 'img/productos/vara-cobra.webp', description: 'Contiene 10 piezas.', category: 'General' }
     ];
 
     let currentCarouselIndex = 0;

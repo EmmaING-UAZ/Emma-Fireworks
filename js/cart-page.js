@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const cartSummaryContainer = document.getElementById('cart-summary-container');
     const generatePdfButton = document.getElementById('generate-pdf-button');
+    const citySelector = document.getElementById('city');
 
     let cart = JSON.parse(localStorage.getItem('emmaFireworksCart')) || [];
 
@@ -16,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if(generatePdfButton) generatePdfButton.disabled = false;
 
-        let total = 0;
+        let subtotalProducts = 0;
         let summaryHtml = `
             <div class="summary-table-header hidden md:grid">
                 <div class="header-cell">Producto</div>
@@ -29,8 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         cart.forEach(item => {
-            const subtotal = item.price * item.quantity;
-            total += subtotal;
+            const itemSubtotal = item.price * item.quantity;
+            subtotalProducts += itemSubtotal;
             summaryHtml += `
                 <div class="summary-table-row" data-id="${item.id}">
                     <div class="table-cell" data-label="Producto">
@@ -47,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <button class="quantity-change-btn increase-quantity" data-id="${item.id}" aria-label="Aumentar cantidad">+</button>
                         </div>
                     </div>
-                    <div class="table-cell text-right md:text-right" data-label="Subtotal">${formatCurrency(subtotal)}</div>
+                    <div class="table-cell text-right md:text-right" data-label="Subtotal">${formatCurrency(itemSubtotal)}</div>
                     <div class="table-cell" data-label="Acciones">
                          <div class="flex items-center justify-end md:justify-center">
                             <button class="remove-item-btn" data-id="${item.id}" aria-label="Eliminar producto">
@@ -59,15 +60,39 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         });
 
+        const selectedCity = citySelector ? citySelector.value : "";
+        let shippingCost = 0;
+        if (selectedCity === 'Zacatecas') {
+            shippingCost = 30;
+        } else if (selectedCity === 'Guadalupe') {
+            shippingCost = 50;
+        }
+
+        const total = subtotalProducts + shippingCost;
+
         summaryHtml += `
             </div>
             <div class="summary-table-footer">
-                <div class="footer-label">Total:</div>
-                <div class="footer-value">${formatCurrency(total)}</div>
+                <div class="footer-item">
+                    <span class="footer-label">Subtotal:</span>
+                    <span class="footer-value">${formatCurrency(subtotalProducts)}</span>
+                </div>
+                <div class="footer-item">
+                    <span class="footer-label">Envío:</span>
+                    <span class="footer-value">${formatCurrency(shippingCost)}</span>
+                </div>
+                <div class="footer-item total-row">
+                    <span class="footer-label">Total:</span>
+                    <span class="footer-value">${formatCurrency(total)}</span>
+                </div>
             </div>
         `;
         cartSummaryContainer.innerHTML = summaryHtml;
         updateHeaderCartCount();
+    }
+
+    if (citySelector) {
+        citySelector.addEventListener('change', renderCartSummary);
     }
 
     function updateHeaderCartCount() {
@@ -116,13 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
         generatePdfButton.addEventListener('click', () => {
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
+            const city = citySelector ? citySelector.value : "";
             const address = document.getElementById('address').value.trim();
 
-            if (!name || !phone || !address) {
+            if (!name || !phone || !address || !city) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Formulario Incompleto',
-                    text: 'Por favor, complete todos los campos de información de entrega.',
+                    text: 'Por favor, complete todos los campos de información de entrega, incluyendo la ciudad.',
                     confirmButtonColor: '#fBBF24'
                 });
                 return;
@@ -156,33 +182,51 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.setTextColor(0, 0, 0);
             doc.text("Nombre: " + name, 14, 40);
             doc.text("Teléfono: " + phone, 14, 46);
-            doc.text("Dirección: " + address, 14, 52);
+            doc.text("Ciudad de Entrega: " + city, 14, 52);
+            doc.text("Dirección: " + address, 14, 58);
 
             // Tabla
             const tableColumn = ["Producto", "Cantidad", "Precio Unitario", "Subtotal"];
             const tableRows = [];
 
-            let total = 0;
+            let subtotalProducts = 0;
 
             cart.forEach(item => {
-                const subtotal = item.price * item.quantity;
+                const itemSubtotal = item.price * item.quantity;
                 tableRows.push([
                     item.name,
                     item.quantity,
                     `$${item.price.toFixed(2)}`,
-                    `$${subtotal.toFixed(2)}`
+                    `$${itemSubtotal.toFixed(2)}`
                 ]);
-                total += subtotal;
+                subtotalProducts += itemSubtotal;
             });
 
-            doc.autoTable(tableColumn, tableRows, { startY: 60 });
+            doc.autoTable(tableColumn, tableRows, { startY: 65 });
 
-            const finalY = doc.autoTable.previous.finalY;
+            let finalY = doc.autoTable.previous.finalY;
+
+            let shippingCost = 0;
+            if (city === 'Zacatecas') {
+                shippingCost = 30;
+            } else if (city === 'Guadalupe') {
+                shippingCost = 50;
+            }
+            const total = subtotalProducts + shippingCost;
+
+            doc.setFontSize(12);
+            doc.setTextColor(0,0,0);
+            doc.text(`Subtotal:`, 150, finalY + 10, { align: 'left' });
+            doc.text(`${formatCurrency(subtotalProducts)}`, 200, finalY + 10, { align: 'right' });
+
+            doc.text(`Costo de Envío:`, 150, finalY + 17, { align: 'left' });
+            doc.text(`${formatCurrency(shippingCost)}`, 200, finalY + 17, { align: 'right' });
 
             doc.setFontSize(14);
             doc.setFont(undefined, 'bold');
-            doc.setTextColor(0, 0, 0);
-            doc.text(`Total General: $${total.toFixed(2)}`, doc.internal.pageSize.getWidth() - 14, finalY + 15, { align: 'right' });
+            doc.text(`Total General:`, 150, finalY + 25, { align: 'left' });
+            doc.text(`${formatCurrency(total)}`, 200, finalY + 25, { align: 'right' });
+
 
             doc.save('resumen-pedido-emmafireworks.pdf');
 
