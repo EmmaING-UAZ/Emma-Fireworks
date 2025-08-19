@@ -1,4 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Countdown Timer
+    const countdownBanner = document.getElementById('countdown-banner');
+    if (countdownBanner) {
+        const countdownDate = new Date("2025-11-30T23:59:59").getTime();
+
+        const updateCountdown = () => {
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
+
+            if (distance < 0) {
+                countdownBanner.innerHTML = "El pedido ha cerrado.";
+                clearInterval(countdownInterval);
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            countdownBanner.innerHTML = `El pedido cierra en ${days}d ${hours}h ${minutes}m ${seconds}s`;
+        };
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown(); // Initial call
+    }
+
     // Menú Móvil
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');

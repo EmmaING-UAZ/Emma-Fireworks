@@ -60,6 +60,9 @@
                 <a href="contacto.html" class="block px-3 py-2 rounded-md text-base font-medium text-yellow-600 bg-yellow-100 hover:bg-yellow-500 hover:text-white transition-colors duration-300" aria-current="page">Contacto</a>
             </div>
         </nav>
+        <div id="countdown-banner" class="countdown-banner-aesthetic">
+            Cargando...
+        </div>
     </header>
 
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-280px)]">
@@ -106,22 +109,14 @@
                     </div>
                 </div>
 
-                <!-- Columna del Mapa -->
-                <div class="md:pl-6">
-                    <h2 class="text-2xl sm:text-3xl font-semibold text-gray-800 mb-6 border-b-2 border-yellow-500 pb-3">Nuestra Ubicación</h2>
-                    <div class="rounded-lg overflow-hidden shadow-xl h-80 md:h-full">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3679.006979862058!2d-102.58206868503419!3d22.765004985080077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86824e73dea19369%3A0x37212f0999053363!2sZacatecas%2C%20Zac.!5e0!3m2!1ses-419!2smx!4v1678156900000!5m2!1ses-419!2smx"
-                            width="100%"
-                            height="100%"
-                            style="border:0;"
-                            allowfullscreen=""
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"
-                            title="Mapa de ubicación de EmmaFireworks">
-                        </iframe>
+                <!-- Columna de Eventos Especiales -->
+                <div class="md:pl-6 flex flex-col justify-center">
+                    <h2 class="text-2xl sm:text-3xl font-semibold text-gray-800 mb-6 border-b-2 border-yellow-500 pb-3">Eventos Especiales</h2>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                        <p class="text-lg text-gray-700 leading-relaxed">
+                            Si tienes algún evento mas grande como boda, bautizo, xv años, revelación de genero, etc. y necesitas <strong class="text-yellow-600 font-bold">pirotecnia profesional</strong>, manda mensaje para cotizarte, nos adecuamos a tu presupuesto.
+                        </p>
                     </div>
-                     <p class="text-sm text-gray-600 mt-4 text-center md:text-left">Visítanos o contáctanos para más información sobre nuestros productos y servicios.</p>
                 </div>
             </div>
         </div>
@@ -157,7 +152,7 @@
         </svg>
     </button>
 
-    <!-- Carrito Panel Lateral (igual que en index.html) -->
+    <!-- Carrito Panel Lateral -->
     <div id="cart-panel" class="fixed top-0 right-0 h-full bg-white shadow-xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out w-full md:w-1/3 lg:w-1/4">
         <div class="flex flex-col h-full">
             <div class="flex items-center justify-between p-4 border-b">
@@ -168,17 +163,23 @@
                     </svg>
                 </button>
             </div>
-            <div id="cart-items-container" class="p-4 flex-grow overflow-y-auto">
-                 <p class="text-gray-500 text-center">Tu carrito está vacío.</p>
+            <div id="cart-items-container" class="p-4 flex-grow overflow-y-auto min-h-0">
+                <!-- Los items del carrito se insertarán aquí por JS -->
+                <p class="text-gray-500 text-center">Tu carrito está vacío.</p>
             </div>
-            <div class="p-4 border-t">
+            <div class="p-4 border-t flex-shrink-0">
                 <div class="flex justify-between items-center mb-4">
                     <span class="text-lg font-semibold text-gray-800">Total:</span>
                     <span id="cart-total" class="text-lg font-semibold text-yellow-600">$0.00</span>
                 </div>
-                <button id="checkout-button" class="w-full bg-yellow-500 text-white py-3 rounded-md font-semibold hover:bg-yellow-600 transition-colors duration-300 disabled:opacity-50" disabled>
-                    Proceder al Pago (Simulado)
-                </button>
+                <a href="carrito.html" id="checkout-link" class="w-full bg-yellow-500 text-white py-3 rounded-md font-semibold hover:bg-yellow-600 transition-colors duration-300 text-center block">
+                    Ver Resumen del Pedido
+                </a>
+                <div class="text-center mt-2">
+                    <button id="clear-cart-button" class="text-sm text-red-500 hover:text-red-700 hover:underline">
+                        Vaciar Carrito
+                    </button>
+                </div>
             </div>
         </div>
     </div>
