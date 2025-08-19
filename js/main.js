@@ -131,109 +131,117 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const featuredProducts = [
         { id: 'prod035', name: 'Cohetón de Luz', price: 450, image: 'img/productos/coheton-de-luz.webp', description: 'Contiene 12 piezas.', category: 'General', imageFit: 'contain' },
-        { id: 'prod032', name: 'Cohetoncito de Micrófono', price: 220, image: 'img/productos/cohetoncito-de-microfono.webp', description: 'Contiene 12 piezas.', category: 'General' },
+        { id: 'prod032', name: 'Cohetoncito de Micrófono', price: 220, image: 'img/productos/cohetoncito-de-microfono.webp', description: 'Contiene 12 piezas.', category: 'General', imageFit: 'contain' },
         { id: 'prod031', name: 'Cohetoncito de Cracker', price: 210, image: 'img/productos/cohetoncito-de-cracker.webp', description: 'Contiene 12 piezas.', category: 'General' },
         { id: 'prod007', name: 'Bazuka 3 Pulgadas', price: 255, image: 'img/productos/bazuka-3-pulgadas.webp', description: 'Descripción no disponible.', category: 'General', imageFit: 'contain' },
         { id: 'prod009', name: 'Bazuka 4 Pulgadas', price: 550, image: 'img/productos/bazuka-4-pulgadas.webp', description: 'Descripción no disponible.', category: 'General', imageFit: 'contain' },
         { id: 'prod008', name: 'Bazuka 3 Pulgadas Cacahuate', price: 320, image: 'img/productos/bazuka-3-pulgadas-cacahuate.webp', description: 'Descripción no disponible.', category: 'General', imageFit: 'contain' },
         { id: 'prod042', name: 'Escupidor de Colores', price: 120, image: 'img/productos/escupidor-de-colores.webp', description: 'Contiene 12 piezas.', category: 'General', imageFit: 'contain' },
-        { id: 'prod073', name: 'Trabuco', price: 100, image: 'img/productos/trabuco.webp', description: 'Contiene 6 piezas.', category: 'General' },
+        { id: 'prod073', name: 'Trabuco', price: 100, image: 'img/productos/trabuco.webp', description: 'Contiene 6 piezas.', category: 'General', imageFit: 'contain' },
         { id: 'prod079', name: 'Vara Mini Llorona', price: 110, image: 'img/productos/vara-mini-llorona.webp', description: 'Contiene 25 piezas.', category: 'General' },
         { id: 'prod076', name: 'Vara Cobra', price: 60, image: 'img/productos/vara-cobra.webp', description: 'Contiene 10 piezas.', category: 'General', imageFit: 'contain' }
     ];
 
+    let isTransitioning = false;
     let currentCarouselIndex = 0;
-    let itemsPerPage = getItemsPerPage();
-    let totalPages = 0;
 
     function getItemsPerPage() {
-        if (window.innerWidth < 640) return 1; // sm
-        if (window.innerWidth < 1024) return 2; // md
-        return 3; // lg and up
+        if (window.innerWidth < 640) return 1;
+        if (window.innerWidth < 1024) return 2;
+        return 3;
     }
 
-    function renderCarouselItems() {
-        if (!carouselTrack || !carouselContainer) return;
-        carouselTrack.innerHTML = ''; // Limpiar
-        itemsPerPage = getItemsPerPage();
-        totalPages = Math.ceil(featuredProducts.length / itemsPerPage);
-
-        featuredProducts.forEach(product => {
-            const imageClass = product.imageFit === 'contain' ? 'long-product-image' : 'object-cover';
-            const productCard = `
-                <div class="carousel-item w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 p-2">
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full hover-effect">
-                        <img src="${product.image || 'https://via.placeholder.com/300x200.png?text=Producto'}" alt="${product.name}" class="w-full h-48 ${imageClass}">
-                        <div class="p-4 flex flex-col flex-grow">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 truncate" title="${product.name}">${product.name}</h3>
-                            <p class="text-sm text-gray-600 mb-3 flex-grow">${product.description.length > 60 ? product.description.substring(0, 60) + '...' : product.description}</p>
-                            <p class="text-xl font-bold text-yellow-600 mb-4">${formatCurrency(product.price)}</p>
-                            <div class="mt-auto">
-                                <div class="flex items-center justify-center space-x-3 mb-4">
-                                    <button onclick="updateQuantity('${product.id}', -1)" aria-label="Disminuir cantidad" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300">-</button>
-                                    <span id="quantity-${product.id}" class="text-lg font-semibold">1</span>
-                                    <button onclick="updateQuantity('${product.id}', 1)" aria-label="Aumentar cantidad" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300">+</button>
-                                </div>
-                                <button onclick="window.addToCart({id:'${product.id}', name:'${product.name}', price:${product.price}, image:'${product.image}', description:'${product.description}'}, getQuantity('${product.id}'))"
-                                        class="w-full bg-yellow-500 text-white py-2 px-4 rounded-md font-semibold hover:bg-yellow-600 transition-colors duration-300 text-sm">
-                                    Agregar al Carrito
-                                </button>
-                                <button onclick="window.openPopularProductModal({id:'${product.id}', name:'${product.name}', price:${product.price}, image:'${product.image}', description:'${product.description}'})"
-                                        class="w-full mt-2 bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors duration-300 text-sm">
-                                    Ver Más
-                                </button>
+    function createProductCard(product) {
+        const imageClass = product.imageFit === 'contain' ? 'long-product-image' : 'object-cover';
+        return `
+            <div class="carousel-item w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 p-2">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full hover-effect">
+                    <img src="${product.image || 'https://via.placeholder.com/300x200.png?text=Producto'}" alt="${product.name}" class="w-full h-48 ${imageClass}">
+                    <div class="p-4 flex flex-col flex-grow">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2 truncate" title="${product.name}">${product.name}</h3>
+                        <p class="text-sm text-gray-600 mb-3 flex-grow">${product.description.length > 60 ? product.description.substring(0, 60) + '...' : product.description}</p>
+                        <p class="text-xl font-bold text-yellow-600 mb-4">${formatCurrency(product.price)}</p>
+                        <div class="mt-auto">
+                            <div class="flex items-center justify-center space-x-3 mb-4">
+                                <button onclick="updateQuantity('${product.id}', -1)" aria-label="Disminuir cantidad" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300">-</button>
+                                <span id="quantity-${product.id}" class="text-lg font-semibold">1</span>
+                                <button onclick="updateQuantity('${product.id}', 1)" aria-label="Aumentar cantidad" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300">+</button>
                             </div>
+                            <button onclick="window.addToCart({id:'${product.id}', name:'${product.name}', price:${product.price}, image:'${product.image}', description:'${product.description}'}, getQuantity('${product.id}'))"
+                                    class="w-full bg-yellow-500 text-white py-2 px-4 rounded-md font-semibold hover:bg-yellow-600 transition-colors duration-300 text-sm">
+                                Agregar al Carrito
+                            </button>
+                            <button onclick="window.openPopularProductModal({id:'${product.id}', name:'${product.name}', price:${product.price}, image:'${product.image}', description:'${product.description}'})"
+                                    class="w-full mt-2 bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors duration-300 text-sm">
+                                Ver Más
+                            </button>
                         </div>
                     </div>
                 </div>
-            `;
-            carouselTrack.innerHTML += productCard;
-        });
-        updateCarousel();
+            </div>
+        `;
     }
 
-    function updateCarousel() {
-        if (!carouselTrack || !carouselContainer) return;
-        const itemWidth = carouselContainer.offsetWidth / itemsPerPage;
-        carouselTrack.style.transition = 'transform 0.5s ease-in-out';
-        carouselTrack.style.transform = `translateX(-${currentCarouselIndex * itemWidth * itemsPerPage}px)`;
-
-        // Ocultar botones si no hay suficientes items para scrollear
-        if (featuredProducts.length <= itemsPerPage) {
-            if(prevButton) prevButton.classList.add('hidden');
-            if(nextButton) nextButton.classList.add('hidden');
-        } else {
-            if(prevButton) prevButton.classList.remove('hidden');
-            if(nextButton) nextButton.classList.remove('hidden');
+    function setupCarousel() {
+        if (!carouselTrack || !carouselContainer || featuredProducts.length === 0) {
+            if (prevButton) prevButton.style.display = 'none';
+            if (nextButton) nextButton.style.display = 'none';
+            return;
         }
-    }
 
-    if (prevButton && nextButton && carouselTrack) {
-        prevButton.addEventListener('click', () => {
-            if (currentCarouselIndex > 0) {
-                currentCarouselIndex--;
-            } else {
-                currentCarouselIndex = totalPages - 1; // Loop al final
-            }
-            updateCarousel();
-        });
+        const itemsPerPage = getItemsPerPage();
+        if (featuredProducts.length <= itemsPerPage) {
+            if (prevButton) prevButton.style.display = 'none';
+            if (nextButton) nextButton.style.display = 'none';
+            carouselTrack.innerHTML = featuredProducts.map(createProductCard).join('');
+            return;
+        }
+
+        if (prevButton) prevButton.style.display = 'block';
+        if (nextButton) nextButton.style.display = 'block';
+
+        const clonedFirst = featuredProducts.slice(0, itemsPerPage);
+        const clonedLast = featuredProducts.slice(-itemsPerPage);
+
+        const allItems = [...clonedLast, ...featuredProducts, ...clonedFirst];
+        carouselTrack.innerHTML = allItems.map(createProductCard).join('');
+
+        currentCarouselIndex = itemsPerPage;
+        const itemWidth = carouselContainer.offsetWidth / itemsPerPage;
+        carouselTrack.style.transform = `translateX(-${currentCarouselIndex * itemWidth}px)`;
+
+        const moveTo = (index, withTransition = true) => {
+            isTransitioning = true;
+            carouselTrack.style.transition = withTransition ? 'transform 0.5s ease-in-out' : 'none';
+            const newTransform = -(index * itemWidth);
+            carouselTrack.style.transform = `translateX(${newTransform}px)`;
+            currentCarouselIndex = index;
+        };
 
         nextButton.addEventListener('click', () => {
-            if (currentCarouselIndex < totalPages - 1) {
-                currentCarouselIndex++;
-            } else {
-                currentCarouselIndex = 0; // Loop al inicio
+            if (isTransitioning) return;
+            moveTo(currentCarouselIndex + 1);
+        });
+
+        prevButton.addEventListener('click', () => {
+            if (isTransitioning) return;
+            moveTo(currentCarouselIndex - 1);
+        });
+
+        carouselTrack.addEventListener('transitionend', () => {
+            isTransitioning = false;
+            if (currentCarouselIndex >= featuredProducts.length + itemsPerPage) {
+                moveTo(itemsPerPage, false);
             }
-            updateCarousel();
+            if (currentCarouselIndex < itemsPerPage) {
+                moveTo(featuredProducts.length + itemsPerPage -1, false);
+            }
         });
+    }
 
-        window.addEventListener('resize', () => {
-            currentCarouselIndex = 0; // Resetear en resize para recalcular
-            renderCarouselItems();
-        });
-
-        // Renderizar carrusel al inicio
-        renderCarouselItems();
+    if (carouselTrack) {
+        setupCarousel();
+        window.addEventListener('resize', setupCarousel);
     }
     // --- FIN CARRUSEL ---
 
@@ -274,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'prod029', name: 'Chifladores de Piso', price: 150, image: 'img/productos/chifladores-de-piso.webp', description: 'Contiene 144 piezas.', category: 'General' },
         { id: 'prod030', name: 'Cohetoncito Bomba', price: 200, image: 'img/productos/cohetoncito-bomba.webp', description: 'Contiene 12 piezas.', category: 'General' },
         { id: 'prod031', name: 'Cohetoncito de Cracker', price: 210, image: 'img/productos/cohetoncito-de-cracker.webp', description: 'Contiene 12 piezas.', category: 'General' },
-        { id: 'prod032', name: 'Cohetoncito de Micrófono', price: 220, image: 'img/productos/cohetoncito-de-microfono.webp', description: 'Contiene 12 piezas.', category: 'General' },
+        { id: 'prod032', name: 'Cohetoncito de Micrófono', price: 220, image: 'img/productos/cohetoncito-de-microfono.webp', description: 'Contiene 12 piezas.', category: 'General', imageFit: 'contain' },
         { id: 'prod033', name: 'Cohetoncito de Paracaídas', price: 210, image: 'img/productos/cohetoncito-de-paracaidas.webp', description: 'Contiene 12 piezas.', category: 'General' },
         { id: 'prod034', name: 'Cohetoncito de Trueno', price: 200, image: 'img/productos/cohetoncito-de-trueno.webp', description: 'Contiene 12 piezas.', category: 'General' },
         { id: 'prod035', name: 'Cohetón de Luz', price: 450, image: 'img/productos/coheton-de-luz.webp', description: 'Contiene 12 piezas.', category: 'General', imageFit: 'contain' },
@@ -315,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'prod070', name: 'Pulgas Mágicas', price: 100, image: 'img/productos/pulgas-magicas.webp', description: 'Contiene 12 piezas.', category: 'General' },
         { id: 'prod071', name: 'Rosas', price: 40, image: 'img/productos/rosas.webp', description: 'Contiene 6 piezas.', category: 'General' },
         { id: 'prod072', name: 'Tamalitos', price: 120, image: 'img/productos/tamalitos.webp', description: 'Contiene 25 piezas.', category: 'General' },
-        { id: 'prod073', name: 'Trabuco', price: 100, image: 'img/productos/trabuco.webp', description: 'Contiene 6 piezas.', category: 'General' },
+        { id: 'prod073', name: 'Trabuco', price: 100, image: 'img/productos/trabuco.webp', description: 'Contiene 6 piezas.', category: 'General', imageFit: 'contain' },
         { id: 'prod074', name: 'Trabuco Jumbo', price: 210, image: 'img/productos/trabuco-jumbo.webp', description: 'Descripción no disponible.', category: 'General' },
         { id: 'prod075', name: 'Trabuquito', price: 80, image: 'img/productos/trabuquito.webp', description: 'Contiene 10 piezas.', category: 'General' },
         { id: 'prod076', name: 'Vara Cobra', price: 60, image: 'img/productos/vara-cobra.webp', description: 'Contiene 10 piezas.', category: 'General', imageFit: 'contain' },
