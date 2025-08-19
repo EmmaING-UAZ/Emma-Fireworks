@@ -222,22 +222,40 @@ main {
 
 /* Pie de la tabla (Total) */
 .summary-table-footer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    text-align: right;
     margin-top: 16px;
-    padding-top: 16px;
+    padding: 16px;
+    background-color: #f9fafb;
     border-top: 2px solid #d1d5db; /* gray-300 */
-    font-size: 1.25rem; /* 20px */
+    border-radius: 0 0 8px 8px;
 }
 
-.footer-label {
+.footer-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.footer-item .footer-label {
+    font-weight: 500;
+    color: #4b5563; /* gray-600 */
+}
+
+.footer-item .footer-value {
     font-weight: 600;
-    margin-right: 16px;
+    color: #1f2937; /* gray-800 */
 }
 
-.footer-value {
-    font-weight: 700;
+.footer-item.total-row {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: bold;
+    padding-top: 12px;
+    margin-top: 8px;
+    border-top: 1px solid #e5e7eb; /* gray-200 */
+}
+
+.footer-item.total-row .footer-value {
     color: #ca8a04; /* yellow-600 */
 }
 
@@ -368,4 +386,9 @@ main {
     60% {
         transform: translateX(-50%) translateY(-5px);
     }
+}
+
+.long-product-image {
+    object-fit: contain;
+    background-color: #f9fafb; /* gray-50 */
 }

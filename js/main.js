@@ -130,145 +130,118 @@ document.addEventListener('DOMContentLoaded', () => {
     const carouselContainer = document.getElementById('carousel-container');
 
     const featuredProducts = [
-        {
-            id: 'fp001',
-            name: 'batería la reina',
-            price: 1250.00,
-            image: 'img/productos/cake_imperial.jpg',
-            description: 'Impresionante batería de 100 disparos con variedad de efectos coloridos y sonoros. Ideal para grandes celebraciones.',
-            category: 'General'
-        },
-        {
-            id: 'fp002',
-            name: 'bazuka 4 pulgadas',
-            price: 80.00,
-            image: 'img/productos/bengalas.jpg',
-            description: 'Clásicas luces de bengala, seguras y divertidas para todas las edades. Chispas doradas brillantes.',
-            category: 'General'
-        },
-        {
-            id: 'fp003',
-            name: 'bob esponja',
-            price: 150.00,
-            image: 'img/productos/volcan_etna.jpg',
-            description: 'Fuente de chispas plateadas de larga duración que alcanza hasta 3 metros de altura.',
-            category: 'General'
-        },
-        {
-            id: 'fp004',
-            name: 'paloma grande',
-            price: 220.00,
-            image: 'img/productos/revelacion_azul.jpg',
-            description: 'Cañón de confeti y polvo de color azul para revelar el género del bebé. ¡Un momento emocionante!',
-            category: 'General'
-        },
-        {
-            id: 'fp005',
-            name: 'Trabuco',
-            price: 45.00,
-            image: 'img/productos/paloma_estruendo.jpg',
-            description: 'Petardo de gran trueno, para los amantes de los efectos sonoros potentes.',
-            category: 'General'
-        },
-        {
-            id: 'fp006',
-            name: 'volcán',
-            price: 350.00,
-            image: 'https://via.placeholder.com/300x200.png?text=Crisantemo+Rojo', // Placeholder
-            description: 'Un efecto clásico de crisantemo rojo que llena el cielo. Impactante y elegante.',
-            category: 'General'
-        }
+        { id: 'prod035', name: 'Cohetón de Luz', price: 450, image: 'img/productos/coheton-de-luz.webp', description: 'Contiene 12 piezas.', category: 'General', imageFit: 'contain' },
+        { id: 'prod032', name: 'Cohetoncito de Micrófono', price: 220, image: 'img/productos/cohetoncito-de-microfono.webp', description: 'Contiene 12 piezas.', category: 'General', imageFit: 'contain' },
+        { id: 'prod031', name: 'Cohetoncito de Cracker', price: 210, image: 'img/productos/cohetoncito-de-cracker.webp', description: 'Contiene 12 piezas.', category: 'General' },
+        { id: 'prod007', name: 'Bazuka 3 Pulgadas', price: 255, image: 'img/productos/bazuka-3-pulgadas.webp', description: 'Descripción no disponible.', category: 'General', imageFit: 'contain' },
+        { id: 'prod009', name: 'Bazuka 4 Pulgadas', price: 550, image: 'img/productos/bazuka-4-pulgadas.webp', description: 'Descripción no disponible.', category: 'General', imageFit: 'contain' },
+        { id: 'prod008', name: 'Bazuka 3 Pulgadas Cacahuate', price: 320, image: 'img/productos/bazuka-3-pulgadas-cacahuate.webp', description: 'Descripción no disponible.', category: 'General', imageFit: 'contain' },
+        { id: 'prod042', name: 'Escupidor de Colores', price: 120, image: 'img/productos/escupidor-de-colores.webp', description: 'Contiene 12 piezas.', category: 'General', imageFit: 'contain' },
+        { id: 'prod073', name: 'Trabuco', price: 100, image: 'img/productos/trabuco.webp', description: 'Contiene 6 piezas.', category: 'General', imageFit: 'contain' },
+        { id: 'prod079', name: 'Vara Mini Llorona', price: 110, image: 'img/productos/vara-mini-llorona.webp', description: 'Contiene 25 piezas.', category: 'General' },
+        { id: 'prod076', name: 'Vara Cobra', price: 60, image: 'img/productos/vara-cobra.webp', description: 'Contiene 10 piezas.', category: 'General', imageFit: 'contain' }
     ];
 
+    let isTransitioning = false;
     let currentCarouselIndex = 0;
-    let itemsPerPage = getItemsPerPage();
-    let totalPages = 0;
 
     function getItemsPerPage() {
-        if (window.innerWidth < 640) return 1; // sm
-        if (window.innerWidth < 1024) return 2; // md
-        return 3; // lg and up
+        if (window.innerWidth < 640) return 1;
+        if (window.innerWidth < 1024) return 2;
+        return 3;
     }
 
-    function renderCarouselItems() {
-        if (!carouselTrack || !carouselContainer) return;
-        carouselTrack.innerHTML = ''; // Limpiar
-        itemsPerPage = getItemsPerPage();
-        totalPages = Math.ceil(featuredProducts.length / itemsPerPage);
-
-        featuredProducts.forEach(product => {
-            const productCard = `
-                <div class="carousel-item w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 p-2">
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full hover-effect">
-                        <img src="${product.image || 'https://via.placeholder.com/300x200.png?text=Producto'}" alt="${product.name}" class="w-full h-48 object-cover">
-                        <div class="p-4 flex flex-col flex-grow">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2 truncate" title="${product.name}">${product.name}</h3>
-                            <p class="text-sm text-gray-600 mb-3 flex-grow">${product.description.length > 60 ? product.description.substring(0, 60) + '...' : product.description}</p>
-                            <p class="text-xl font-bold text-yellow-600 mb-4">${formatCurrency(product.price)}</p>
-                            <div class="mt-auto">
-                                <div class="flex items-center justify-center space-x-3 mb-4">
-                                    <button onclick="updateQuantity('${product.id}', -1)" aria-label="Disminuir cantidad" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300">-</button>
-                                    <span id="quantity-${product.id}" class="text-lg font-semibold">1</span>
-                                    <button onclick="updateQuantity('${product.id}', 1)" aria-label="Aumentar cantidad" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300">+</button>
-                                </div>
-                                <button onclick="window.addToCart({id:'${product.id}', name:'${product.name}', price:${product.price}, image:'${product.image}', description:'${product.description}'}, getQuantity('${product.id}'))"
-                                        class="w-full bg-yellow-500 text-white py-2 px-4 rounded-md font-semibold hover:bg-yellow-600 transition-colors duration-300 text-sm">
-                                    Agregar al Carrito
-                                </button>
-                                <button onclick="window.openPopularProductModal({id:'${product.id}', name:'${product.name}', price:${product.price}, image:'${product.image}', description:'${product.description}'})"
-                                        class="w-full mt-2 bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors duration-300 text-sm">
-                                    Ver Más
-                                </button>
+    function createProductCard(product) {
+        const imageClass = product.imageFit === 'contain' ? 'long-product-image' : 'object-cover';
+        return `
+            <div class="carousel-item w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 p-2">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full hover-effect">
+                    <img src="${product.image || 'https://via.placeholder.com/300x200.png?text=Producto'}" alt="${product.name}" class="w-full h-48 ${imageClass}">
+                    <div class="p-4 flex flex-col flex-grow">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2 truncate" title="${product.name}">${product.name}</h3>
+                        <p class="text-sm text-gray-600 mb-3 flex-grow">${product.description.length > 60 ? product.description.substring(0, 60) + '...' : product.description}</p>
+                        <p class="text-xl font-bold text-yellow-600 mb-4">${formatCurrency(product.price)}</p>
+                        <div class="mt-auto">
+                            <div class="flex items-center justify-center space-x-3 mb-4">
+                                <button onclick="updateQuantity('${product.id}', -1)" aria-label="Disminuir cantidad" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300">-</button>
+                                <span id="quantity-${product.id}" class="text-lg font-semibold">1</span>
+                                <button onclick="updateQuantity('${product.id}', 1)" aria-label="Aumentar cantidad" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300">+</button>
                             </div>
+                            <button onclick="window.addToCart({id:'${product.id}', name:'${product.name}', price:${product.price}, image:'${product.image}', description:'${product.description}'}, getQuantity('${product.id}'))"
+                                    class="w-full bg-yellow-500 text-white py-2 px-4 rounded-md font-semibold hover:bg-yellow-600 transition-colors duration-300 text-sm">
+                                Agregar al Carrito
+                            </button>
+                            <button onclick="window.openPopularProductModal({id:'${product.id}', name:'${product.name}', price:${product.price}, image:'${product.image}', description:'${product.description}'})"
+                                    class="w-full mt-2 bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors duration-300 text-sm">
+                                Ver Más
+                            </button>
                         </div>
                     </div>
                 </div>
-            `;
-            carouselTrack.innerHTML += productCard;
-        });
-        updateCarousel();
+            </div>
+        `;
     }
 
-    function updateCarousel() {
-        if (!carouselTrack || !carouselContainer) return;
-        const itemWidth = carouselContainer.offsetWidth / itemsPerPage;
-        carouselTrack.style.transform = `translateX(-${currentCarouselIndex * itemWidth * itemsPerPage}px)`;
-
-        if (prevButton) prevButton.disabled = currentCarouselIndex === 0;
-        if (nextButton) nextButton.disabled = currentCarouselIndex >= totalPages -1 ;
-
-        // Para un carrusel que no es "infinito", ocultar botones si no hay más items
-        if (featuredProducts.length <= itemsPerPage) {
-            if(prevButton) prevButton.classList.add('hidden');
-            if(nextButton) nextButton.classList.add('hidden');
-        } else {
-            if(prevButton) prevButton.classList.remove('hidden');
-            if(nextButton) nextButton.classList.remove('hidden');
+    function setupCarousel() {
+        if (!carouselTrack || !carouselContainer || featuredProducts.length === 0) {
+            if (prevButton) prevButton.style.display = 'none';
+            if (nextButton) nextButton.style.display = 'none';
+            return;
         }
-    }
 
-    if (prevButton && nextButton && carouselTrack) {
-        prevButton.addEventListener('click', () => {
-            if (currentCarouselIndex > 0) {
-                currentCarouselIndex--;
-                updateCarousel();
-            }
-        });
+        const itemsPerPage = getItemsPerPage();
+        if (featuredProducts.length <= itemsPerPage) {
+            if (prevButton) prevButton.style.display = 'none';
+            if (nextButton) nextButton.style.display = 'none';
+            carouselTrack.innerHTML = featuredProducts.map(createProductCard).join('');
+            return;
+        }
+
+        if (prevButton) prevButton.style.display = 'block';
+        if (nextButton) nextButton.style.display = 'block';
+
+        const clonedFirst = featuredProducts.slice(0, itemsPerPage);
+        const clonedLast = featuredProducts.slice(-itemsPerPage);
+
+        const allItems = [...clonedLast, ...featuredProducts, ...clonedFirst];
+        carouselTrack.innerHTML = allItems.map(createProductCard).join('');
+
+        currentCarouselIndex = itemsPerPage;
+        const itemWidth = carouselContainer.offsetWidth / itemsPerPage;
+        carouselTrack.style.transform = `translateX(-${currentCarouselIndex * itemWidth}px)`;
+
+        const moveTo = (index, withTransition = true) => {
+            isTransitioning = true;
+            carouselTrack.style.transition = withTransition ? 'transform 0.5s ease-in-out' : 'none';
+            const newTransform = -(index * itemWidth);
+            carouselTrack.style.transform = `translateX(${newTransform}px)`;
+            currentCarouselIndex = index;
+        };
 
         nextButton.addEventListener('click', () => {
-            if (currentCarouselIndex < totalPages - 1) {
-                currentCarouselIndex++;
-                updateCarousel();
+            if (isTransitioning) return;
+            moveTo(currentCarouselIndex + 1);
+        });
+
+        prevButton.addEventListener('click', () => {
+            if (isTransitioning) return;
+            moveTo(currentCarouselIndex - 1);
+        });
+
+        carouselTrack.addEventListener('transitionend', () => {
+            isTransitioning = false;
+            if (currentCarouselIndex >= featuredProducts.length + itemsPerPage) {
+                moveTo(itemsPerPage, false);
+            }
+            if (currentCarouselIndex < itemsPerPage) {
+                moveTo(featuredProducts.length + itemsPerPage -1, false);
             }
         });
+    }
 
-        window.addEventListener('resize', () => {
-            currentCarouselIndex = 0; // Resetear en resize para recalcular
-            renderCarouselItems();
-        });
-
-        // Renderizar carrusel al inicio
-        renderCarouselItems();
+    if (carouselTrack) {
+        setupCarousel();
+        window.addEventListener('resize', setupCarousel);
     }
     // --- FIN CARRUSEL ---
 
@@ -282,11 +255,11 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'prod002', name: 'Adrenocromo', price: 120, image: 'img/productos/adrenocromo.webp', description: 'Contiene 6 piezas.', category: 'General' },
         { id: 'prod003', name: 'Batería Baby', price: 100, image: 'img/productos/bateria-baby.webp', description: 'Descripción no disponible.', category: 'General' },
         { id: 'prod004', name: 'Batería La Reina', price: 150, image: 'img/productos/bateria-la-reina.webp', description: 'Descripción no disponible.', category: 'General' },
-        { id: 'prod005', name: 'Bazuca Baby', price: 100, image: 'img/productos/bazuca-baby.webp', description: 'Descripción no disponible.', category: 'General' },
-        { id: 'prod006', name: 'Bazuka 2 Pulgadas', price: 150, image: 'img/productos/bazuka-2-pulgadas.webp', description: 'Descripción no disponible.', category: 'General' },
-        { id: 'prod007', name: 'Bazuka 3 Pulgadas', price: 255, image: 'img/productos/bazuka-3-pulgadas.webp', description: 'Descripción no disponible.', category: 'General' },
-        { id: 'prod008', name: 'Bazuka 3 Pulgadas Cacahuate', price: 320, image: 'img/productos/bazuka-3-pulgadas-cacahuate.webp', description: 'Descripción no disponible.', category: 'General' },
-        { id: 'prod009', name: 'Bazuka 4 Pulgadas', price: 550, image: 'img/productos/bazuka-4-pulgadas.webp', description: 'Descripción no disponible.', category: 'General' },
+        { id: 'prod005', name: 'Bazuca Baby', price: 100, image: 'img/productos/bazuca-baby.webp', description: 'Descripción no disponible.', category: 'General', imageFit: 'contain' },
+        { id: 'prod006', name: 'Bazuka 2 Pulgadas', price: 150, image: 'img/productos/bazuka-2-pulgadas.webp', description: 'Descripción no disponible.', category: 'General', imageFit: 'contain' },
+        { id: 'prod007', name: 'Bazuka 3 Pulgadas', price: 255, image: 'img/productos/bazuka-3-pulgadas.webp', description: 'Descripción no disponible.', category: 'General', imageFit: 'contain' },
+        { id: 'prod008', name: 'Bazuka 3 Pulgadas Cacahuate', price: 320, image: 'img/productos/bazuka-3-pulgadas-cacahuate.webp', description: 'Descripción no disponible.', category: 'General', imageFit: 'contain' },
+        { id: 'prod009', name: 'Bazuka 4 Pulgadas', price: 550, image: 'img/productos/bazuka-4-pulgadas.webp', description: 'Descripción no disponible.', category: 'General', imageFit: 'contain' },
         { id: 'prod010', name: 'Billete', price: 100, image: 'img/productos/billete.webp', description: 'Descripción no disponible.', category: 'General' },
         { id: 'prod011', name: 'Bob Esponja', price: 100, image: 'img/productos/bob-esponja.webp', description: 'Contiene 16 piezas.', category: 'General' },
         { id: 'prod012', name: 'Bobillo Grande', price: 170, image: 'img/productos/bobillo-grande.webp', description: 'Descripción no disponible.', category: 'General' },
@@ -309,19 +282,19 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'prod029', name: 'Chifladores de Piso', price: 150, image: 'img/productos/chifladores-de-piso.webp', description: 'Contiene 144 piezas.', category: 'General' },
         { id: 'prod030', name: 'Cohetoncito Bomba', price: 200, image: 'img/productos/cohetoncito-bomba.webp', description: 'Contiene 12 piezas.', category: 'General' },
         { id: 'prod031', name: 'Cohetoncito de Cracker', price: 210, image: 'img/productos/cohetoncito-de-cracker.webp', description: 'Contiene 12 piezas.', category: 'General' },
-        { id: 'prod032', name: 'Cohetoncito de Micrófono', price: 220, image: 'img/productos/cohetoncito-de-microfono.webp', description: 'Contiene 12 piezas.', category: 'General' },
+        { id: 'prod032', name: 'Cohetoncito de Micrófono', price: 220, image: 'img/productos/cohetoncito-de-microfono.webp', description: 'Contiene 12 piezas.', category: 'General', imageFit: 'contain' },
         { id: 'prod033', name: 'Cohetoncito de Paracaídas', price: 210, image: 'img/productos/cohetoncito-de-paracaidas.webp', description: 'Contiene 12 piezas.', category: 'General' },
         { id: 'prod034', name: 'Cohetoncito de Trueno', price: 200, image: 'img/productos/cohetoncito-de-trueno.webp', description: 'Contiene 12 piezas.', category: 'General' },
-        { id: 'prod035', name: 'Cohetón de Luz', price: 450, image: 'img/productos/coheton-de-luz.webp', description: 'Contiene 12 piezas.', category: 'General' },
-        { id: 'prod036', name: 'Cohetón de Trueno', price: 370, image: 'img/productos/coheton-de-trueno.webp', description: 'Contiene 12 piezas.', category: 'General' },
+        { id: 'prod035', name: 'Cohetón de Luz', price: 450, image: 'img/productos/coheton-de-luz.webp', description: 'Contiene 12 piezas.', category: 'General', imageFit: 'contain' },
+        { id: 'prod036', name: 'Cohetón de Trueno', price: 370, image: 'img/productos/coheton-de-trueno.webp', description: 'Contiene 12 piezas.', category: 'General', imageFit: 'contain' },
         { id: 'prod037', name: 'Cosmopolitan', price: 1000, image: 'img/productos/cosmopolitan.webp', description: 'Descripción no disponible.', category: 'General' },
         { id: 'prod038', name: 'Cracker de Colores', price: 230, image: 'img/productos/cracker-de-colores.webp', description: 'Contiene 144 piezas.', category: 'General' },
         { id: 'prod039', name: 'Crackle Spinners', price: 80, image: 'img/productos/crackle-spinners.webp', description: 'Contiene 6 piezas.', category: 'General' },
         { id: 'prod040', name: 'Cuete Blanco', price: 120, image: 'img/productos/cuete-blanco.webp', description: 'Contiene 20 rollos.', category: 'General' },
         { id: 'prod041', name: 'Dragoncitos', price: 70, image: 'img/productos/dragoncitos.webp', description: 'Descripción no disponible.', category: 'General' },
-        { id: 'prod042', name: 'Escupidor de Colores', price: 120, image: 'img/productos/escupidor-de-colores.webp', description: 'Contiene 12 piezas.', category: 'General' },
-        { id: 'prod043', name: 'Escupidor de Cracker', price: 120, image: 'img/productos/escupidor-de-cracker.webp', description: 'Contiene 12 piezas.', category: 'General' },
-        { id: 'prod044', name: 'Escupidor de Diamantina', price: 110, image: 'img/productos/escupidor-de-diamantina.webp', description: 'Contiene 12 piezas.', category: 'General' },
+        { id: 'prod042', name: 'Escupidor de Colores', price: 120, image: 'img/productos/escupidor-de-colores.webp', description: 'Contiene 12 piezas.', category: 'General', imageFit: 'contain' },
+        { id: 'prod043', name: 'Escupidor de Cracker', price: 120, image: 'img/productos/escupidor-de-cracker.webp', description: 'Contiene 12 piezas.', category: 'General', imageFit: 'contain' },
+        { id: 'prod044', name: 'Escupidor de Diamantina', price: 110, image: 'img/productos/escupidor-de-diamantina.webp', description: 'Contiene 12 piezas.', category: 'General', imageFit: 'contain' },
         { id: 'prod045', name: 'Espanta Suegras', price: 120, image: 'img/productos/espanta-suegras.webp', description: 'Descripción no disponible.', category: 'General' },
         { id: 'prod046', name: 'Flash', price: 250, image: 'img/productos/flash.webp', description: 'Contiene 144 piezas.', category: 'General' },
         { id: 'prod047', name: 'Frozen', price: 115, image: 'img/productos/frozen.webp', description: 'Descripción no disponible.', category: 'General' },
@@ -333,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'prod053', name: 'Hulk Chico', price: 150, image: 'img/productos/hulk-chico.webp', description: 'Contiene 50 piezas.', category: 'General' },
         { id: 'prod054', name: 'Hulk Mega', price: 220, image: 'img/productos/hulk-mega.webp', description: 'Contiene 20 piezas.', category: 'General' },
         { id: 'prod055', name: 'Juguitos Explosivos', price: 130, image: 'img/productos/juguitos-explosivos.webp', description: 'Contiene 12 piezas.', category: 'General' },
-        { id: 'prod056', name: 'Mexicano Espacial', price: 160, image: 'img/productos/mexicano-espacial.webp', description: 'Contiene 3 piezas.', category: 'General' },
+        { id: 'prod056', name: 'Mexicano Espacial', price: 160, image: 'img/productos/mexicano-espacial.webp', description: 'Contiene 3 piezas.', category: 'General', imageFit: 'contain' },
         { id: 'prod057', name: 'Misil Chico', price: 200, image: 'img/productos/misil-chico.webp', description: 'Contiene 38 piezas.', category: 'General' },
         { id: 'prod058', name: 'Mosaico de Color', price: 120, image: 'img/productos/mosaico-de-color.webp', description: 'Descripción no disponible.', category: 'General' },
         { id: 'prod059', name: 'Olla Chica', price: 90, image: 'img/productos/olla-chica.webp', description: 'Contiene 12 piezas.', category: 'General' },
@@ -350,14 +323,14 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'prod070', name: 'Pulgas Mágicas', price: 100, image: 'img/productos/pulgas-magicas.webp', description: 'Contiene 12 piezas.', category: 'General' },
         { id: 'prod071', name: 'Rosas', price: 40, image: 'img/productos/rosas.webp', description: 'Contiene 6 piezas.', category: 'General' },
         { id: 'prod072', name: 'Tamalitos', price: 120, image: 'img/productos/tamalitos.webp', description: 'Contiene 25 piezas.', category: 'General' },
-        { id: 'prod073', name: 'Trabuco', price: 100, image: 'img/productos/trabuco.webp', description: 'Contiene 6 piezas.', category: 'General' },
+        { id: 'prod073', name: 'Trabuco', price: 100, image: 'img/productos/trabuco.webp', description: 'Contiene 6 piezas.', category: 'General', imageFit: 'contain' },
         { id: 'prod074', name: 'Trabuco Jumbo', price: 210, image: 'img/productos/trabuco-jumbo.webp', description: 'Descripción no disponible.', category: 'General' },
         { id: 'prod075', name: 'Trabuquito', price: 80, image: 'img/productos/trabuquito.webp', description: 'Contiene 10 piezas.', category: 'General' },
-        { id: 'prod076', name: 'Vara Cobra', price: 60, image: 'img/productos/vara-cobra.webp', description: 'Contiene 10 piezas.', category: 'General' },
+        { id: 'prod076', name: 'Vara Cobra', price: 60, image: 'img/productos/vara-cobra.webp', description: 'Contiene 10 piezas.', category: 'General', imageFit: 'contain' },
         { id: 'prod077', name: 'Vara Ever', price: 40, image: 'img/productos/vara-ever.webp', description: 'Contiene 10 piezas.', category: 'General' },
-        { id: 'prod078', name: 'Vara Ever Jumbo', price: 60, image: 'img/productos/vara-ever-jumbo.webp', description: 'Contiene 10 piezas.', category: 'General' },
+        { id: 'prod078', name: 'Vara Ever Jumbo', price: 60, image: 'img/productos/vara-ever-jumbo.webp', description: 'Contiene 10 piezas.', category: 'General', imageFit: 'contain' },
         { id: 'prod079', name: 'Vara Mini Llorona', price: 110, image: 'img/productos/vara-mini-llorona.webp', description: 'Contiene 25 piezas.', category: 'General' },
-        { id: 'prod080', name: 'Vara Pajarera', price: 150, image: 'img/productos/vara-pajarera.webp', description: 'Contiene 144 piezas.', category: 'General' },
+        { id: 'prod080', name: 'Vara Pajarera', price: 150, image: 'img/productos/vara-pajarera.webp', description: 'Contiene 144 piezas.', category: 'General', imageFit: 'contain' },
         { id: 'prod081', name: 'Vara Urba', price: 40, image: 'img/productos/vara-urba.webp', description: 'Contiene 10 piezas.', category: 'General' },
         { id: 'prod082', name: 'Volcán', price: 55, image: 'img/productos/volcan.webp', description: 'Contiene 10 piezas.', category: 'General' }
     ];
@@ -369,9 +342,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderProductCard(product) {
         const truncatedDescription = product.description.length > 80 ? product.description.substring(0, 80) + '...' : product.description;
+        const imageClass = product.imageFit === 'contain' ? 'long-product-image' : 'object-cover';
         return `
             <div class="product-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col hover-effect reveal-fade-in" data-category="${product.category}">
-                <img src="${product.image || 'https://via.placeholder.com/300x200.png?text=Producto'}" alt="${product.name}" class="w-full h-56 object-cover">
+                <img src="${product.image || 'https://via.placeholder.com/300x200.png?text=Producto'}" alt="${product.name}" class="w-full h-56 ${imageClass}">
                 <div class="p-5 flex flex-col flex-grow">
                     <h3 class="text-xl font-semibold text-gray-800 mb-2 truncate" title="${product.name}">${product.name}</h3>
                     <p class="text-sm text-gray-500 mb-3 flex-grow">${truncatedDescription}</p>
