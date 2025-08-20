@@ -158,7 +158,10 @@
     <div id="product-modal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden p-4">
         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
-                <h3 id="modal-product-name" class="text-2xl font-semibold text-gray-800">Nombre del Producto</h3>
+                <div class="flex items-center">
+                    <h3 id="modal-product-name" class="text-2xl font-semibold text-gray-800">Nombre del Producto</h3>
+                    <span id="modal-product-classification" class="ml-3 text-sm font-bold text-white bg-yellow-500 px-2.5 py-1 rounded-full"></span>
+                </div>
                 <button id="close-modal-button" aria-label="Cerrar modal" class="text-gray-600 hover:text-red-500">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />

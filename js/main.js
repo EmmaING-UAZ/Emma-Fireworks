@@ -156,7 +156,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return `
             <div class="carousel-item w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 p-2">
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full hover-effect">
-                    <img src="${product.image || 'https://via.placeholder.com/300x200.png?text=Producto'}" alt="${product.name}" class="w-full h-48 ${imageClass}">
+                    <div class="relative">
+                        <img src="${product.image || 'https://via.placeholder.com/300x200.png?text=Producto'}" alt="${product.name}" class="w-full h-48 ${imageClass}">
+                        <div class="absolute top-2 right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full">${product.classification}</div>
+                    </div>
                     <div class="p-4 flex flex-col flex-grow">
                         <h3 class="text-lg font-semibold text-gray-800 mb-2 truncate" title="${product.name}">${product.name}</h3>
                         <p class="text-sm text-gray-600 mb-3 flex-grow">${product.description.length > 60 ? product.description.substring(0, 60) + '...' : product.description}</p>
@@ -337,7 +340,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const categories = [
         'Mostrar Todos',
-        'General'
+        'aéreo',
+        'luz',
+        'trueno',
+        'profesional'
     ];
 
     function renderProductCard(product) {
@@ -345,7 +351,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const imageClass = product.imageFit === 'contain' ? 'long-product-image' : 'object-cover';
         return `
             <div class="product-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col hover-effect reveal-fade-in" data-category="${product.category}">
-                <img src="${product.image || 'https://via.placeholder.com/300x200.png?text=Producto'}" alt="${product.name}" class="w-full h-56 ${imageClass}">
+                <div class="relative">
+                    <img src="${product.image || 'https://via.placeholder.com/300x200.png?text=Producto'}" alt="${product.name}" class="w-full h-56 ${imageClass}">
+                    <div class="absolute top-2 right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full">${product.classification}</div>
+                </div>
                 <div class="p-5 flex flex-col flex-grow">
                     <h3 class="text-xl font-semibold text-gray-800 mb-2 truncate" title="${product.name}">${product.name}</h3>
                     <p class="text-sm text-gray-500 mb-3 flex-grow">${truncatedDescription}</p>
