@@ -216,16 +216,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             doc.setFontSize(12);
             doc.setTextColor(0,0,0);
-            doc.text(`Subtotal:`, 150, finalY + 10, { align: 'left' });
-            doc.text(`${formatCurrency(subtotalProducts)}`, 200, finalY + 10, { align: 'right' });
+            doc.text(`Subtotal:`, 140, finalY + 10, { align: 'left' });
+            doc.text(`${formatCurrency(subtotalProducts)}`, 190, finalY + 10, { align: 'right' });
 
-            doc.text(`Costo de Envío:`, 150, finalY + 17, { align: 'left' });
-            doc.text(`${formatCurrency(shippingCost)}`, 200, finalY + 17, { align: 'right' });
+            doc.text(`Costo de Envío:`, 140, finalY + 17, { align: 'left' });
+            doc.text(`${formatCurrency(shippingCost)}`, 190, finalY + 17, { align: 'right' });
 
             doc.setFontSize(14);
             doc.setFont(undefined, 'bold');
-            doc.text(`Total General:`, 150, finalY + 25, { align: 'left' });
-            doc.text(`${formatCurrency(total)}`, 200, finalY + 25, { align: 'right' });
+            doc.text(`Total General:`, 140, finalY + 25, { align: 'left' });
+            doc.text(`${formatCurrency(total)}`, 190, finalY + 25, { align: 'right' });
 
 
             doc.save('resumen-pedido-emmafireworks.pdf');

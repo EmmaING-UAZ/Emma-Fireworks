@@ -260,14 +260,14 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'prod007', name: 'Bazuka 3 Pulgadas', price: 255, image: 'img/productos/bazuka-3-pulgadas.webp', description: 'Proyectil de 3” impulsado al cielo, con colores variados y un diámetro de apertura de 70 metros, aproximadamente.', category: 'General', imageFit: 'contain' },
         { id: 'prod008', name: 'Bazuka 3 Pulgadas Cacahuate', price: 320, image: 'img/productos/bazuka-3-pulgadas-cacahuate.webp', description: 'Proyectiles de 1”, 2” y 3” que abren en el cielo secuencialmente, dando un espectáculo visualmente atractivo.', category: 'General', imageFit: 'contain' },
         { id: 'prod009', name: 'Bazuka 4 Pulgadas', price: 550, image: 'img/productos/bazuka-4-pulgadas.webp', description: 'Proyectil de 4” impulsada al cielo, con una apertura de colores variados con un diámetro de, aproximadamente, 100 metros.', category: 'General', imageFit: 'contain' },
-        { id: 'prod010', name: 'Billete', price: 100, image: 'img/productos/billete.webp', description: 'Varios disparos de serpientes de colores.', category: 'General' },
+        { id: 'prod010', name: 'Billete', price: 80, image: 'img/productos/billete.webp', description: 'Varios disparos de serpientes de colores.', category: 'General' },
         { id: 'prod011', name: 'Bob Esponja', price: 100, image: 'img/productos/bob-esponja.webp', description: 'Contiene 16 piezas. Tronidos de colores en el suelo.', category: 'General' },
-        { id: 'prod012', name: 'Bobillo Grande', price: 170, image: 'img/productos/bobillo-grande.webp', description: 'Tiros secuenciales hacia el cielo de diferentes colores.', category: 'General' },
         { id: 'prod013', name: 'Bola de Humo', price: 25, image: 'img/productos/bola-de-humo.webp', description: 'Contiene 10 piezas. La clásica bola de humo de color.', category: 'General' },
         { id: 'prod014', name: 'Bola de Humo Gigante', price: 100, image: 'img/productos/bola-de-humo-gigante.webp', description: 'Contiene 10 piezas. La bola de humo tradicional, pero de un tamaño más grande.', category: 'General' },
         { id: 'prod015', name: 'Bola de Luz', price: 25, image: 'img/productos/bola-de-luz.webp', description: 'Contiene 10 piezas. Bola que emite chispas al encenderse, cambiando el humo por chispas.', category: 'General' },
         { id: 'prod016', name: 'Bombillo', price: 90, image: 'img/productos/bombillo.webp', description: 'Contiene 100 piezas. El clásico bombillo con un estallido medio-fuerte.', category: 'General' },
         { id: 'prod017', name: 'Bombillo Mediano', price: 110, image: 'img/productos/bombillo-mediano.webp', description: 'Contiene 100 piezas. El bombillo de un tamaño más grande, con un trueno superior.', category: 'General' },
+        { id: 'prod012', name: 'Bombillo Grande', price: 170, image: 'img/productos/bombillo-grande.webp', description: 'Tiros secuenciales hacia el cielo de diferentes colores.', category: 'General' },
         { id: 'prod018', name: 'Bombillo Mini', price: 150, image: 'img/productos/bombillo-mini.webp', description: 'Contiene 400 piezas. La versión pequeña del bombillo de trueno suave.', category: 'General' },
         { id: 'prod019', name: 'Bombillo R-15', price: 150, image: 'img/productos/bombillo-r-15.webp', description: 'Contiene 90 piezas. El clásico trueno más fuerte del R-15.', category: 'General' },
         { id: 'prod020', name: 'Bombillo R-15 Tricolor', price: 170, image: 'img/productos/bombillo-r-15-tricolor.webp', description: 'Contiene 100 piezas. El R-15, pero edición patriota con los 3 colores de la bandera.', category: 'General' },
@@ -436,9 +436,47 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initial render on catalog page
         renderCategoryFilters();
         displayProducts(allProducts);
+
+        const searchInput = document.getElementById('search-input-catalog');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                const activeCategoryButton = categoryFiltersContainer.querySelector('button[data-active="true"]');
+                const activeCategory = activeCategoryButton ? activeCategoryButton.textContent : 'Mostrar Todos';
+
+                let productsToFilter = allProducts;
+                if (activeCategory !== 'Mostrar Todos') {
+                    productsToFilter = allProducts.filter(p => p.category === activeCategory);
+                }
+
+                const filteredProducts = productsToFilter.filter(product => {
+                    return product.name.toLowerCase().includes(searchTerm) ||
+                           product.description.toLowerCase().includes(searchTerm);
+                });
+                displayProducts(filteredProducts);
+            });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchFromUrl = urlParams.get('search');
+            if (searchFromUrl) {
+                searchInput.value = decodeURIComponent(searchFromUrl);
+                searchInput.dispatchEvent(new Event('input'));
+            }
+        }
     }
     // --- FIN LÓGICA PÁGINA DE CATÁLOGO ---
 
+    const searchInputHome = document.getElementById('search-input-home');
+    if (searchInputHome) {
+        searchInputHome.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const searchTerm = e.target.value.trim();
+                if (searchTerm) {
+                    window.location.href = `catalogo.html?search=${encodeURIComponent(searchTerm)}`;
+                }
+            }
+        });
+    }
 });
 
 // Pequeña función helper para formatear moneda (ejemplo)
