@@ -102,6 +102,17 @@
                    class="bg-white text-yellow-600 font-semibold py-3 px-8 rounded-lg text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 hover-effect">
                     Ver Catálogo
                 </a>
+                <!-- Search Bar -->
+                <div class="mt-8 max-w-xl mx-auto">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <input id="search-input-home" type="search" name="search" class="block w-full bg-white bg-opacity-20 text-white placeholder-gray-300 border border-transparent rounded-full py-3 pl-10 pr-3 leading-5 focus:outline-none focus:bg-opacity-30 focus:border-white focus:ring-white" placeholder="Buscar producto">
+                    </div>
+                </div>
             </div>
             <a href="#productos-populares" class="scroll-down-arrow" aria-label="Ir a productos populares">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
@@ -221,7 +232,10 @@
     <div id="product-modal-popular" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden p-4">
         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
-                <h3 id="modal-product-name-popular" class="text-2xl font-semibold text-gray-800">Nombre del Producto</h3>
+                <div class="flex items-center">
+                    <h3 id="modal-product-name-popular" class="text-2xl font-semibold text-gray-800">Nombre del Producto</h3>
+                    <span id="modal-product-classification-popular" class="ml-3 text-sm font-bold text-white bg-yellow-500 px-2.5 py-1 rounded-full"></span>
+                </div>
                 <button id="close-modal-button-popular" aria-label="Cerrar modal" class="text-gray-600 hover:text-red-500">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />

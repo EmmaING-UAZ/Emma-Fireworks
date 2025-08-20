@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Elementos del modal que se actualizarán
     const modalProductName = document.getElementById('modal-product-name');
+    const modalProductClassification = document.getElementById('modal-product-classification');
     const modalProductImage = document.getElementById('modal-product-image');
     const modalProductDescription = document.getElementById('modal-product-description');
     const modalProductPrice = document.getElementById('modal-product-price');
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentQuantity = 1; // Reset quantity
 
         if (modalProductName) modalProductName.textContent = product.name;
+        if (modalProductClassification) modalProductClassification.textContent = product.classification;
         if (modalProductImage) {
             modalProductImage.src = product.image || 'https://via.placeholder.com/400x300.png?text=Producto';
             modalProductImage.alt = product.name;
