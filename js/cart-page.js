@@ -154,6 +154,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            if (address.length < 5) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Dirección Inválida',
+                    text: 'La dirección debe tener al menos 5 caracteres.',
+                    confirmButtonColor: '#fBBF24'
+                });
+                return;
+            }
+
             if (phone.length < 10) {
                 Swal.fire({
                     icon: 'error',
