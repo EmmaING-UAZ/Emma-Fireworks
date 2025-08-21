@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="summary-table-row" data-id="${item.id}">
                     <div class="table-cell" data-label="Producto">
                         <div class="flex items-center">
-                            <img src="${item.image || 'https://via.placeholder.com/50'}" alt="${item.name}" class="w-12 h-12 object-cover rounded mr-4 hidden sm:block">
+                            <img src="${item.image || 'https://via.placeholder.com/50'}" alt="${item.name}" class="w-12 h-12 object-cover rounded mr-4 block">
                             <span>${item.name}</span>
                         </div>
                     </div>
