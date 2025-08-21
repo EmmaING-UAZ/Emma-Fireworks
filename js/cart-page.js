@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             doc.setFontSize(14);
             doc.setFont(undefined, 'bold');
-            doc.text(`Total General:`, 120, finalY + 25, { align: 'left' });
+            doc.text(`Total General:`, 90, finalY + 25, { align: 'left' });
             doc.text(`${formatCurrency(total)}`, 170, finalY + 25, { align: 'right' });
 
 
